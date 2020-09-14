@@ -1,0 +1,14 @@
+setup.py
+datafact/__init__.py
+datafact/circle_maker.py
+datafact/coxswain.py
+datafact/line_maker.py
+datafact/maker.py
+datafact/modelgen.py
+datafact/pointgenerator.py
+datafact/utils.py
+datafact.egg-info/PKG-INFO
+datafact.egg-info/SOURCES.txt
+datafact.egg-info/dependency_links.txt
+datafact.egg-info/requires.txt
+datafact.egg-info/top_level.txt
