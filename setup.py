@@ -1,8 +1,8 @@
 from setuptools import find_packages, setup
 setup(
     name='datafact',
-    packages=find_packages(include=['datafact']),
-    version='0.1.18',
+    packages=find_packages(include=['datafact', 'datafact.utils', 'datafact.makers','datafact.makers.maker']),
+    version='0.1.72',
     description='My first Python library',
     author='William Bonvini',
     license='MIT',

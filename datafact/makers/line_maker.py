@@ -1,39 +1,49 @@
 import math
+import os
 from random import uniform
 import random as rand
 
-from datafact.maker import Maker
+from datafact.makers.maker import Maker
 import numpy as np
 import scipy.io
 
-from datafact.utils import convert_to_np_struct_and_shuffle, convert_to_mat_struct, checkExistenceAndCreate
+from datafact.utils.utils import convert_to_np_struct_and_shuffle, convert_to_mat_struct, checkExistenceAndCreate, \
+    compute_num_of_inliers_for_each_model, plot_sample, convert_to_np_struct
 import matplotlib.pyplot as plt
 
 
 class LineMaker(Maker):
-    def __init__(self, coxwain):
-        super(LineMaker, self).__init__(coxwain)
+
+    def __init__(self):
+        Maker.MODEL = 'lines'
+        super(LineMaker, self).__init__()
+
+    @staticmethod
+    def point(m, q, noise_perc):
+        x = uniform(-1, 1)
+        y = m * x + q + np.random.normal(0, noise_perc)
+        return x, y
+
+    @staticmethod
+    def outliers_uniform(m, q):
+        x = uniform(-1, 1)
+        y = uniform(-1, 1)
+        return x, y
 
 
+    def generate_random_model(self,n_inliers=None):
+        """
+        :param n_inliers: number of inlier points for this specific model
+        :return:
+        """
+        m = uniform(-3, 3)
+        q = uniform(-0.1, 0.1)
+        xy = [LineMaker.point(m, q, LineMaker.NOISE_PERC) for _ in range(n_inliers)]
+        return xy
 
 
-
-
-    def point(self,m,q,noise_perc):
-        x = uniform(-8,8)
-        y = m*x + q + np.random.normal(0,noise_perc)
-        return x,y
-
-    def outliers_uniform(self,m,q):
-        x = uniform(-8,8)
-        y = uniform(-8,8)
-        return x,y
-
-
-
-
+"""
     def generate_dataset_given_or(self, outliers_perc):
-        coxwain = self.getCoxwain()
         line_dt = np.dtype([('x1p', 'O'), ('x2p', 'O'), ('labels', 'O')])
         numPoints = coxwain.getNumPointsPerSample()
         avg_num_inliers = numPoints - math.floor(float(numPoints) * outliers_perc)
@@ -48,7 +58,7 @@ class LineMaker(Maker):
             lines = []
             for _ in range(coxwain.getNumSamples()):
                 m = uniform(-3, 3)
-                q = uniform(-1, 1)
+                q = uniform(-0.1, 0.1)
 
                 n_inliers = inliers_range[rand.randint(0, len(inliers_range) - 1)]
                 line_mat = self.generate_line(m, q, n_inliers, outliers_perc=outliers_perc)
@@ -61,25 +71,22 @@ class LineMaker(Maker):
                 int(outliers_perc * 100)) + '.mat'
             scipy.io.savemat(folder, mdict={'dataset': dataset, 'outlierRate': outliers_perc})
 
-
     def generate_line(self, m, q, n_inliers, outliers_perc):
         coxwain = self.getCoxwain()
         inliers, outliers = self.create_noisy_line(m, q, n_inliers=n_inliers,
-                                                     outliers_perc=outliers_perc, plot=True)
+                                                   outliers_perc=outliers_perc, plot=True)
 
         line = convert_to_np_struct_and_shuffle(coxwain, inliers, outliers)
 
         line_mat = convert_to_mat_struct(line)
         return line_mat
 
-
-
     def create_noisy_line(self, m, q, n_inliers, outliers_perc, plot):
         coxwain = self.getCoxwain()
         noiseperc = coxwain.getNoisePerc()
-        xy = [self.point(m,q, noiseperc) for _ in range(n_inliers)]
+        xy = [self.point(m, q, noiseperc) for _ in range(n_inliers)]
         n_outliers = coxwain.getNumPointsPerSample() - n_inliers
-        xy_outliers = [self.outliers_uniform(m,q) for _ in range(n_outliers)]
+        xy_outliers = [self.outliers_uniform(m, q) for _ in range(n_outliers)]
 
         if plot:
             plt.scatter(*zip(*xy), s=2)
@@ -101,7 +108,4 @@ class LineMaker(Maker):
         return xy, xy_outliers
 
 
-
-
-
-
+"""

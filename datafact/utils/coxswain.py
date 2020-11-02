@@ -1,27 +1,41 @@
 class Singleton(type):
     _instances = {}
 
-    def __call__(cls,*args,**kwargs):
+    def __call__(cls, *args, **kwargs):
         if cls not in cls._instances:
             cls._instances[cls] = super(Singleton,cls)
         return cls._instances[cls]
 
 
-
 '''
 simply a class that handles in what folder do what and all the parameters
 '''
+
+
 class Coxwain:
+
+    NUM_SAMPLES = None
+    NUM_POINTS_PER_SAMPLE = None
+    OUTLIERS_PERC_RANGE = None
+    MODEL = None
+    NOISE_PERC_RANGE = None
+    DEST = None
+    BASE_DIR = None
+    TRAIN_DIR = None
+    TEST_DIR = None
+    NUMBER_OF_MODELS = None
+    IMG_BASE_DIR = None
+
     def __init__(self, homeDir):
         self._homeDir = homeDir
 
-    def setTestDir(self,testDir):
+    def setTestDir(self, testDir):
         self._testDir = testDir
 
     def getTestDir(self):
         return self._testDir
 
-    def setTrainDir(self,trainDir):
+    def setTrainDir(self, trainDir):
         self._trainDir = trainDir
 
     def getTrainDir(self):
@@ -30,7 +44,7 @@ class Coxwain:
     def getHomeDir(self):
         return self._homeDir
 
-    def setNumPointsPerSample(self,numPointsPerSample):
+    def setNumPointsPerSample(self, numPointsPerSample):
         self._numPointsPerSample = numPointsPerSample
 
     def getNumPointsPerSample(self):
@@ -54,11 +68,11 @@ class Coxwain:
     def getModel(self):
         return self._model
 
-    def setNoisePerc(self, noise_perc):
-        self._noisePerc = noise_perc
+    def setNoiseRange(self, noise_range):
+        self._noiseRange = noise_range
 
-    def getNoisePerc(self):
-        return self._noisePerc
+    def getNoiseRange(self):
+        return self._noiseRange
 
     def setDest(self, dest):
         self._dest = dest
@@ -66,8 +80,7 @@ class Coxwain:
     def getDest(self):
         return self._dest
 
-
-    def setCurDir(self,curDir):
+    def setCurDir(self, curDir):
         self._curDir = curDir
 
     def getCurDir(self):
@@ -79,21 +92,13 @@ class Coxwain:
     def getBaseDir(self):
         return self._baseDir
 
+    def setNumberOfModels(self, numberOfModels):
+        self._numberOfModels = numberOfModels
 
-
-
+    def getNumberOfModels(self):
+        return self._numberOfModels
 
 
 class MyCoxwain(Coxwain,metaclass=Singleton):
     def __init__(self, homeDir):
         super().__init__(homeDir)
-
-
-
-
-
-
-
-
-
-
