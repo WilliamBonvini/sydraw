@@ -1,5 +1,5 @@
-from datafact.makers.maker import Maker
-from datafact.utils.utils import convert_to_np_struct
+from syndalib.makers.maker import Maker
+from syndalib.utils.utils import convert_to_np_struct
 import numpy as np
 
 
@@ -10,16 +10,20 @@ def test_convert_to_np_struct():
     inliers_model_list = [inliers_model_1, inliers_model_2]
     outliers_list = [(4, 4), (2, 1), (3, 9)]
 
-    target = np.array([[3, 5, 0, 1],
-                       [2, 8, 0, 1],
-                       [3, 1, 0, 1],
-                       [2, 9, 1, 0],
-                       [1, 1, 1, 0],
-                       [4, 8, 1, 0],
-                       [1, 0, 1, 0],
-                       [4, 4, 1, 1],
-                       [2, 1, 1, 1],
-                       [3, 9, 1, 1]])
+    target = np.array(
+        [
+            [3, 5, 0, 1],
+            [2, 8, 0, 1],
+            [3, 1, 0, 1],
+            [2, 9, 1, 0],
+            [1, 1, 1, 0],
+            [4, 8, 1, 0],
+            [1, 0, 1, 0],
+            [4, 4, 1, 1],
+            [2, 1, 1, 1],
+            [3, 9, 1, 1],
+        ]
+    )
     """
     target = np.array([[3., 2., 3., 2., 1., 4., 1., 4., 2., 3.],
                        [5., 8., 1., 9., 1., 8., 0., 4., 1., 9.],
@@ -28,7 +32,6 @@ def test_convert_to_np_struct():
     """
     result = convert_to_np_struct(inliers_model_list, outliers_list)
     assert (result == target).all()
-
 
 
 def test_shuffler():
@@ -46,5 +49,4 @@ def test_shuffler():
     np.random.shuffle(result)
     print("after shuffling:")
     print(result)
-    assert(1 == 1)
-
+    assert 1 == 1

@@ -1,0 +1,5 @@
+matplotlib~=3.3.2
+numpy~=1.18.5
+scipy~=1.4.1
+datafact~=0.1.6
+setuptools~=50.3.2
