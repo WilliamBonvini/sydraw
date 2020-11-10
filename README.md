@@ -2,7 +2,7 @@
 Syndalib (Synthetic Data Library) is a python library that helps you create synthetic 2D point clouds for single/multi-model single/multi-class tasks.  
 It makes you fix a set of hyperparameters for each class of models you are interested in generating.  
 Models are saved in a .mat file format.  
-<img src="media/imgs/scsm1.png" style="zoom:30%"> <img src="media/imgs/scsm2.png" style= "zoom:30%"> <img src="media/imgs/mcmm1.png" style="zoom:30%"> <img src="media/imgs/mcmm2.png" style="zoom:30%"> 
+<img src="media/imgs/scsm1.png" style="zoom:20%"> <img src="media/imgs/scsm2.png" style= "zoom:20%"> <img src="media/imgs/mcmm1.png" style="zoom:20%"> <img src="media/imgs/mcmm2.png" style="zoom:20%"> 
 # setup
 ##### install with pip
 ``` pip install syndalib ```
