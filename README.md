@@ -6,7 +6,7 @@ Have a look at some samples:
 
 Single Class - Single Model                        |  Single Class -  Multi Model                        |  Multi Class - Multi Model                        |   
 :-------------------------------------------------:|:---------------------------------------------------:|:-------------------------------------------------:|
- <img src="media/imgs/scsm1.png" style="zoom:30%"> |  <img src="media/imgs/scmm1.png" style="zoom:30%">  |  <img src="media/imgs/mcmm1.png" style="zoom:30%">|
+ <img src="media/imgs/scsm1.png" style="zoom:50%"> |  <img src="media/imgs/scmm1.png" style="zoom:50%">  |  <img src="media/imgs/mcmm1.png" style="zoom:50%">|
                         
 
 
