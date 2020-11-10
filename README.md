@@ -61,7 +61,7 @@ syn2d.generate_data(ns=1024,
                     )
 ```
 
-# terminolgy and abbreviations
+# terminology and abbreviations
 - sample: unordered set of points. a sample is made by outliers and inliers for each sampled model.
 - model: instance of a class (i.e. line with a specific slope and intercept)
 - npps: number of points per sample
