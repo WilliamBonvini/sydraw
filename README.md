@@ -2,9 +2,10 @@
 Syndalib (Synthetic Data Library) is a python library that helps you create synthetic 2D point clouds for single/multi-model single/multi-class tasks.  
 It makes you fix a set of hyperparameters for each class of models you are interested in generating.  
 Models are saved in a .mat file format.  
-<img src="media/imgs/scsm1.png" style="zoom:30%"> <img src="media/imgs/scsm2.png" style= "zoom:30%"> <img src="media/imgs/mcmm1.png" style="zoom:630%"> <img src="media/imgs/mcmm2.png" style="zoom:30%"> 
+<img src="media/imgs/scsm1.png" style="zoom:30%"> <img src="media/imgs/scsm2.png" style= "zoom:30%"> <img src="media/imgs/mcmm1.png" style="zoom:30%"> <img src="media/imgs/mcmm2.png" style="zoom:30%"> 
 # setup
-
+##### install with pip
+``` pip install syndalib ```
 
 # usage
 You can generate models of circles, lines and ellipses.  
@@ -62,11 +63,11 @@ syn2d.generate_data(ns=1024,
 ```
 
 # terminology and abbreviations
-- sample: unordered set of points. a sample is made by outliers and inliers for each sampled model.
-- model: instance of a class (i.e. line with a specific slope and intercept)
-- npps: number of points per sample
-- ns: number of samples within each .mat file
-- nm: number of models to be generated within each sample of the dataset
+- ```sample:``` unordered set of points. a sample is made by outliers and inliers for each sampled model.
+- ```model:``` instance of a class (i.e. line with a specific slope and intercept)
+- ```npps:``` number of points per sample
+- ```ns:``` number of samples within each .mat file
+- ```nm:``` number of models to be generated within each sample of the dataset
 
 # data folder
 data are saved in a structured fashion.   
