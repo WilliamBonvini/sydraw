@@ -67,7 +67,9 @@ The code above will generate .mat files inside the directory "example_dir"
 (if it doesn't exists it will be created in the same folder from which you'll start the script).
 
 # data folder
-
+data are saved in a structured fashion.   
+here I'll show you where the data generated in the previous code snippet will be saved:
+```
 ./data
     |- circles
             |- nm_2
@@ -76,24 +78,37 @@ The code above will generate .mat files inside the directory "example_dir"
                                   |- ns_1024
                                           |- test
                                                 |- imgs
-                                               \|     |- \*.jpg files 
-                                                |- no_10_noise_0.01.mat
-                                                |- no_20_noise_0.01.mat
-                                                |- no_30_noise_0.01.mat
-                                                |- no_40_noise_0.01.mat
-                                                |- no_50_noise_0.01.mat
+                                                |- circles_no_10_noise_0.01.mat
+                                                |- circles_no_20_noise_0.01.mat
+                                                |- circles_no_30_noise_0.01.mat
+                                                |- circles_no_40_noise_0.01.mat
+                                                |- circles_no_50_noise_0.01.mat
                                               
-                                             
+```                                             
+where ```imgs``` contains some images of the randomly sampled models. It has the following structure:
+```
+imgs
+   |- circles_no_10_noise_0.01
+                            |- *jpg files
+   |- circles_no_20_noise_0.01
+                            |- *jpg files 
+   |- circles_no_30_noise_0.01
+                            |- *jpg files
+   |- circles_no_40_noise_0.01
+                            |- *jpg files 
+   |- circles_no_50_noise_0.01
+                            |- *jpg files
+```
 
 # Circles
-class_type = "circles"
+```class_type = "circles"```
 
 # Ellipses
-class_type = "ellipses"
+```class_type = "ellipses"```
 
 # Lines
-class_type = "lines"
+```class_type = "lines"```
 
 # Conics
-class_type = "conics"
+```class_type = "conics"```
 - Generic Conic (includes all the ones above, not implemented hyperbola yet)
