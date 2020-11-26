@@ -1,6 +1,8 @@
 README.md
 setup.py
 syndalib/__init__.py
+syndalib/drawer.py
+syndalib/plot.py
 syndalib/syn2d.py
 syndalib.egg-info/PKG-INFO
 syndalib.egg-info/SOURCES.txt

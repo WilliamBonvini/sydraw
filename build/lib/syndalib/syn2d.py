@@ -59,8 +59,7 @@ def generate_data(
     noise_range: List,
     ds_name: str,
     is_train: bool = True,
-    format: str = "matlab",
-):
+    format: str = "matlab"):
     """
     generates .mat files in a structured fashion within the specified folder
 
@@ -72,6 +71,7 @@ def generate_data(
     :param noise_range: list of floats, list of stddevs of the gaussian noise to be added to the inliers (ex. noise range = [0.01, 0.02, 0.03] will generate samples with gaussian noise (0,0.01), (0,0.02) and (0, 0.03).
     :param ds_name: str, format of file "matlab" is the only one supported so far. default is "matlab".
     :param is_train: bool, true to write data in train folder, false to write data in test folder. default is True.
+
     :param format:
     :return:
     """
