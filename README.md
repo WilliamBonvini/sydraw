@@ -16,7 +16,7 @@ Single Class - Single Model                        |  Single Class -  Multi Mode
 ##### install with pip
 ``` pip install syndalib ```
 
-# usage
+# Datasets Generation
 You can generate models of circles, lines and ellipses.  
 You can define a vast set of parameters to specify the sampling space and the characteristics of your models (the hyperparameters change for each model, but each of them consists in a interval of values the hyperparameter can take).  
 In this README you'll find a section for each class of models in which I'll dig deeper into the hyperparameters I provide.  
@@ -164,8 +164,42 @@ the default values are:
     },
 ```
 
-
 ## conics
 ```class_type = "conics"```    
 randomly samples models from the classes specified above.     
 hyperbola is not implemented yet.
+
+# Points and Models Generations
+If you are not interested in generating huge datasets of data corrupted by outliers and noise, namely, if you just want to generate some points belonging to a specific model and retrieve such models coefficients, you can do as follows. 
+I'll show you an example using a circle, but there are analogous functions for the other conics
+
+```
+from syndalib import drawer
+```
+##### points generation
+generates 10 randomly sampled points from a user-specified circle.
+```
+circle = drawer.circle_points(r=3.0, c=(1.0,1.0), n=10)
+```
+
+The code above will generate a numpy array of 2D points in homogeneous coordinates. Such points belong to the circle with radius = 3 and center = (1.0,1.0).
+```
+>>> array([[-1.51779408, -0.63116921,  1.        ],
+       [-1.83302435,  1.98690071,  1.        ],
+       [-0.0106027 ,  3.82465612,  1.        ],
+       [-0.32848561,  3.68981895,  1.        ],
+       [-1.93858646,  0.39608805,  1.        ],
+       [ 3.66809769, -0.37158839,  1.        ],
+       [-0.54906204,  3.56912569,  1.        ],
+       [ 3.88941592,  1.8070165 ,  1.        ],
+       [ 2.56806854, -1.55756937,  1.        ],
+       [ 3.88477601,  1.82344847,  1.        ]])
+```
+
+
+##### model coefficients generation
+```
+circle = drawer.circle_coefs(r=3.0, c=(1.0, 1.0), n=10)
+```
+The code above will return a numpy array whose elemens are the coefficients of the corresponding conic.
+
