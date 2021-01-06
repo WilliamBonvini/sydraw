@@ -49,7 +49,7 @@ class Test(TestCase):
         self.assertTrue((output_coefs == target_coefs).all())
 
 
-    def test_dlt_coefs_with_nparray(self):
+    def test_dlt_coefs_both_args_nparray(self):
         coefs = linalg.dlt_coefs(circle_vandermonde_as_conic, circle_inliers_prob)
         target = circle_coefs_as_conic
         print("coefs = {}".format(coefs))
@@ -58,12 +58,15 @@ class Test(TestCase):
 
 
 
-    def test_dlt_coefs_with_tf_tensors(self):
-        coefs = tf.constant(linalg.dlt_coefs(circle_vandermonde_as_conic, circle_inliers_prob))
-        target = tf.constant(circle_coefs_as_conic)
+    def test_dlt_coefs_both_args_tftensors(self):
+        cvac = tf.constant(circle_vandermonde_as_conic)
+        cip = tf.constant(circle_inliers_prob)
+        coefs = linalg.dlt_coefs(cvac, cip)
+        target = circle_coefs_as_conic
         print("coefs = {}".format(coefs))
         print("target = {}".format(target))
         self.assertTrue(np.allclose(coefs, target))
+
 
 
 

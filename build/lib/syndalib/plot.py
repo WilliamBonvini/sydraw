@@ -1,6 +1,7 @@
 from typing import Type, List, Tuple, Union
 import matplotlib.pyplot as plt
 import numpy as np
+import tensorflow as tf
 
 
 def plot_2d(points: Type[np.array]):
@@ -14,6 +15,7 @@ def plot_2d(points: Type[np.array]):
     plt.scatter(xs, ys, s=10)
 
 
+@tf.function
 def plot_conic_curve(coefs: List,
                      x_range: Tuple[float, float] = (-10.0, 10.0),
                      y_range: Tuple[float, float] = (-10.0, 10.0),

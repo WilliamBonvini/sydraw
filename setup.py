@@ -9,7 +9,7 @@ setup(
             "syndalib.makers",
         ]
     ),
-    version="0.1.6",
+    version="0.1.7",
     description="synthetic point cloud library",
     author="William Bonvini",
     license="MIT",

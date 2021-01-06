@@ -2,6 +2,7 @@ import math
 import random
 import numpy as np
 from typing import Tuple, List, Union
+import tensorflow as tf
 
 
 def outliers_points(x_range: Tuple[float, float],
@@ -126,7 +127,7 @@ def corrupted_circle_points(radius: float,
     return points
 
 
-def conic_points(coefs: List,
+def conic_points(coefs: Union[List, np.ndarray],
                  x_range: Tuple[float, float] = (-10.0, 10.0),
                  y_range: Tuple[float, float] = (-10.0, 10.0),
                  resolution: Union[int, Tuple[int, int]] = 1000):
@@ -138,13 +139,6 @@ def conic_points(coefs: List,
     :param resolution: how many points to be sampled in each of the 2 dimensions, default is 1000*1000
     :return: (x,y,), pair of coordinates of conic
     """
-    a, b, c, d, e, f = coefs
-    if a == 0 and b == 0 and c == 0:
-        raise Exception("Inputted linear equation")
-
-    coefs_mat = np.array([[a, b / 2, d / 2],
-                          [b / 2, c, e / 2],
-                          [d / 2, e / 2, f]], dtype=float)
 
     if type(resolution) == int:
         nx = ny = resolution
@@ -158,6 +152,52 @@ def conic_points(coefs: List,
     X = np.linspace(*x_range, nx)
     Y = np.linspace(*y_range, ny)
     xv, yv = np.meshgrid(X, Y)
+
+    """
+    if type(coefs) is not np.ndarray and type(coefs) is not List:
+        a = coefs[0]
+        b = coefs[1]
+        c = coefs[2]
+        d = coefs[3]
+        e = coefs[4]
+        f = coefs[5]
+        print("coefs is a tensor probably...{}".format(type(coefs)))
+        print(a)
+
+        row1 = tf.stack([a, b/2, d/2], axis=0)
+        row2 = tf.stack([b/2, c, e/2], axis=0)
+        row3 = tf.stack([d/2, e/2, f], axis=0)
+
+        coefs_mat = tf.stack([row1, row2, row3], axis=0)
+
+        print("let's try... coefs_mat is: \n{}".format(coefs_mat))
+        for i in range(nx):
+            for j in range(nx):
+                point = tf.constant([xv[i, j], yv[i, j], 1], dtype=tf.float64)
+                print("point: {}".format(point))
+                print("coefs_mat: {}".format(coefs_mat))
+                first_dot = tf.tensordot(point, coefs_mat, axes=[0, 1])
+                print("first dot:  {}".format(first_dot))
+                out = tf.tensordot(first_dot, point, axes=[0, 0])
+                print("out!!! : {}".format(out))
+                if tf.less(tf.constant(-1e-2, dtype=tf.float64), out) and tf.less(out, tf.constant(1e-2, dtype=tf.float64)):
+                    #x.append(xv[i, j])
+                    #y.append(yv[i, j])
+                    
+                    x.append(point[0])
+                    y.append(point[1])
+                    
+        return x, y
+    """
+
+    a, b, c, d, e, f = coefs
+    if a == 0 and b == 0 and c == 0:
+        raise Exception("Inputted linear equation")
+
+    coefs_mat = np.array([[a, b / 2, d / 2],
+                          [b / 2, c, e / 2],
+                          [d / 2, e / 2, f]], dtype=float)
+
     for i in range(nx):
         for j in range(nx):
             point = np.array([xv[i, j], yv[i, j], 1], dtype=float)
@@ -166,4 +206,8 @@ def conic_points(coefs: List,
                 x.append(point[0])
                 y.append(point[1])
     return x, y
+
+
+
+
 
