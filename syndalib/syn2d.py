@@ -1,13 +1,12 @@
-import string
+import
 import os
-from typing import Type, List
+from typing import List
 
 from syndalib.makers.circle_maker import CircleMaker
 from syndalib.makers.conic_maker import ConicMaker
 from syndalib.makers.ellipse_maker import EllipseMaker
 from syndalib.makers.line_maker import LineMaker
 from syndalib.makers.maker import Maker
-from syndalib.utils.config import opts
 
 
 def set_options(options: dict) -> None:

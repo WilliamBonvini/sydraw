@@ -1,5 +1,5 @@
 from unittest import TestCase
-import syndalib.drawer as dr
+import syndalib.synth as dr
 from tests import SyndalibTest
 
 
@@ -24,7 +24,6 @@ class Test(SyndalibTest):
         for i in range(outliers.shape[0]):
             assert x_range[0] <= outliers[i][0] < x_range[1] and y_range[0] <= outliers[i][1] < y_range[1] and \
                    outliers[i].shape[0] == 2
-
 
     def test_corrupted_circle_points(self):
         """

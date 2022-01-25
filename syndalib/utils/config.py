@@ -1,4 +1,4 @@
-opts = {
+OPTS = {
     "outliers": {"x_r": (-2.5, 2.5), "y_r": (-2.5, 2.5)},
     "circles": {
         "radius_r": (0.5, 1.5),

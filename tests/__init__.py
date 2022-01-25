@@ -1,4 +1,4 @@
-import syndalib.drawer as sydraw
+import syndalib.synth as sydraw
 import syndalib.linalg as syla
 import numpy as np
 circle_params = (3.0, (1.0, 1.0))
