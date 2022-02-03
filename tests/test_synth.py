@@ -2,7 +2,7 @@ from unittest import TestCase
 
 import numpy as np
 
-from syndalib import synth
+from syndalib.package import synth
 
 
 class Test(TestCase):

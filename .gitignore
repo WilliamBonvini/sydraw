@@ -1,7 +1,8 @@
 # Created by .ignore support plugin (hsz.mobi)
 build/bdist.win-amd64/
 syndalib/__pycache__/
-syndalib/makers/__pycache__/
-syndalib/utils/__pycache__/
+syndalib/package/syndalib/makers/__pycache__/
+syndalib/package/syndalib/utils/__pycache__/
 tests/__pycache__/
 .idea/.name
+/syndalib/venv-syndalib/

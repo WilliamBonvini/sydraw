@@ -1,5 +1,5 @@
-import syndalib.synth as sydraw
-import syndalib.linalg as syla
+import syndalib.package.synth as sydraw
+import syndalib.package.linalg as syla
 import numpy as np
 circle_params = (3.0, (1.0, 1.0))
 circle_points = sydraw.circle_points(*circle_params, n=10, noise=0.0, homogeneous=True)

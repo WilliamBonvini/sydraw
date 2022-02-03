@@ -1,5 +1,5 @@
-from syndalib.makers.maker import Maker
-from syndalib.utils.utils import convert_to_np_struct
+from syndalib.package.makers import Maker
+from syndalib.package.utils.utils import convert_to_np_struct
 import numpy as np
 
 

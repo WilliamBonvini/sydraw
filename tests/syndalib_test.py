@@ -1,5 +1,5 @@
 from unittest import TestCase
-import syndalib.synth as sydraw
+import syndalib.package.synth as sydraw
 import numpy as np
 
 

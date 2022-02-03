@@ -1,7 +1,7 @@
 from unittest import TestCase
 from tests import *
 import numpy as np
-from syndalib import linalg
+from syndalib.package import linalg
 import tensorflow as tf
 
 

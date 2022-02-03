@@ -1,5 +1,4 @@
-from unittest import TestCase
-import syndalib.synth as dr
+import syndalib.package.synth as dr
 from tests import SyndalibTest
 
 
