@@ -18,9 +18,9 @@ with open(requirements_file, "r") as f:
 
 
 # Package configuration
-setup(name="syndalib",
+setup(name="sydraw",
       version="0.0.0",
-      description="Synthetic Data Library",
+      description="Synthetic Data Drawer",
       packages=find_packages(),
-      package_data={"syndalib": _get_resources("syndalib"), "tests": ["stubs/*"]},
+      package_data={"sydraw": _get_resources("sydraw"), "tests": ["stubs/*"]},
       install_requires=requirements)
