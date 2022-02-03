@@ -1,7 +1,5 @@
 from typing import Tuple
-import tensorflow as tf
 import numpy as np
-import tensorflow.keras.backend as K
 
 
 def conic_monomials(points):
@@ -56,8 +54,7 @@ def circle_monomials(points):
 
 
 def dlt_coefs(vandermonde,
-              weights=None,
-              returned_type: str = "numpy"):
+              weights=None):
     """
     compute coefficients of a conic through direct linear mapping.
     vandermonde and weights arguments should be or both np.ndarrays or both tf.tensors
@@ -66,45 +63,15 @@ def dlt_coefs(vandermonde,
     :param vandermonde: (number of points, number of monomials),np.array or tf.tensor. each row contains monomials (e.g. for a conic: x^2 xy y^2 x y 1) of the corresponding point
     :param weights: (number of points,) np.array or tf.tensor. probability of belonging to the model for each row in the vandermonde matrix.
                     if all points belong to the model don't specify its value.
-    :param returned_type: str, "numpy" returns an np.ndarray; "tensorflow" returns a tf.tensor
     :return: np.ndarray or tf.tensor (depending on the value of the parameter "type"), (number of monomials,), the coefficients computed via dlt
     """
 
-    # tmp
-    """
-    if type(vandermonde) is not tf.constant:
-        vandermonde = tf.constant(vandermonde)
-    
-    if type(weights) is not tf.constant and weights is not None:
-        weights = tf.constant(weights)
-        
-    # this line is inserted only because in my project weights are np.ndarrays, and it conflicts with vandermonde (which is a tensor)
-    weights = tf.constant(weights)
-    """
-
-    npps = weights.shape[0]
-
-    if returned_type == "tensorflow":
-        # preprocess weights
-
-        weights = tf.cast(weights, dtype=tf.float64)
-        weights = weights + K.random_uniform((npps,), 0, 1e-9, dtype=tf.float64)  # --> (npps, nm)
-        weights = tf.linalg.normalize(weights, axis=0)[0]
-        weights = tf.linalg.diag(weights)
-        weighted_vander = tf.matmul(weights, vandermonde)
-
-        U, S, V = tf.linalg.svd(weighted_vander)  # pay attention. tf.linals.svd returns directly V!! not V tranposed!
-
-    elif returned_type == "numpy":
-        weights = weights + np.random.normal(0, 1e-9)
-        weights = weights / np.linalg.norm(weights)
-        weights = np.diag(weights)
-        weighted_vander = np.matmul(weights, vandermonde)
-        U, S, VT = np.linalg.svd(weighted_vander)
-        V = np.transpose(VT)
-
-    else:
-        raise Exception("Invalid argument for return_type")
+    weights = weights + np.random.normal(0, 1e-9)
+    weights = weights / np.linalg.norm(weights)
+    weights = np.diag(weights)
+    weighted_vander = np.matmul(weights, vandermonde)
+    U, S, VT = np.linalg.svd(weighted_vander)
+    V = np.transpose(VT)
 
     dlt_coefficients = V[:, -1]
     dlt_coefficients = dlt_coefficients * (1.0 / dlt_coefficients[0])  # want the x^2 and y^2 terms to be close to 1
@@ -134,8 +101,6 @@ def circle_coefs(radius: float,
         return np.array([a, b, c, d, e, f], dtype=float)
     else:
         return np.array([a, d, e, f], dtype=float)
-
-
 
 
 def veronese_map(points, n):

@@ -1,12 +1,12 @@
 import math
 import random
 import numpy as np
-
 from typing import Tuple, List, Union
-from scipy.spatial.transform import Rotation
 
-from syndalib.package.utils.cameraops import simCamTransform, simCamProj, normalize
-from syndalib.package.utils.config import OPTS
+from scipy.spatial.transform.rotation import Rotation
+
+from sydraw.package.sydraw.utils.cameraops import normalize, simCamProj, simCamTransform
+from sydraw.package.sydraw.utils.config import OPTS
 
 """
 synth.circle
@@ -24,10 +24,7 @@ synth.homographies
 """
 
 
-def outliers(x_range: Tuple[float, float],
-             y_range: Tuple[float, float],
-             n: int,
-             homogeneous: bool = True):
+def outliers(x_range: Tuple[float, float], y_range: Tuple[float, float], n: int, homogeneous: bool = True):
     """
     generates outliers in a user specified 2D square
 
@@ -57,14 +54,9 @@ def outliers(x_range: Tuple[float, float],
     return np.array(outliers_points, dtype=float)
 
 
-def circle(radius: float,
-           center: Tuple[float, float],
-           n: int,
-           noise_perc: float = 0.0,
-           outliers_perc: float = 0.0,
-           homogeneous: bool = False,
-           shuffle: bool = True,
-           outliers_bounded: bool = True):
+def circle(radius: float, center: Tuple[float, float], n: int,
+           noise_perc: float = 0.0, outliers_perc: float = 0.0,
+           homogeneous: bool = False, shuffle: bool = True, outliers_bounded: bool = True):
     """
     generates circle points given radius and center.
     if outliers_perc = 0 it will return a np.array.
@@ -78,8 +70,10 @@ def circle(radius: float,
     :param noise_perc: gaussian noise standard deviation
     :param outliers_perc: percentage of outliers out of n data points
     :param homogeneous: bool, if True returns homogeneous coordinates, otherwise euclidean coordinates, default is False
-    :param shuffle: bool, if True shuffles outliers with data, otherwise method returns one np.array for conic and one for outliers
-    :param outliers_bounded: bool, if True outliers are bounded within the borders of the curve, otherwise they assume values defined in configuration, default is True.
+    :param shuffle: bool, if True shuffles outliers with data, otherwise method returns one np.array for conic and one
+                    for outliers
+    :param outliers_bounded: bool, if True outliers are bounded within the borders of the curve, otherwise they assume
+                             values defined in configuration, default is True.
     :return: np array [(x_1,y_1,1),...,(x_np,y_np,1)] or pair of np.arrays
     """
 
@@ -116,15 +110,9 @@ def circle(radius: float,
     return points
 
 
-def circles(ns: int,
-            radius: float,
-            center: Tuple[float, float],
-            n: int,
-            noise_perc: float = 0.0,
-            outliers_perc: float = 0.0,
-            homogeneous: bool = False,
-            shuffle: bool = True,
-            outliers_bounded: bool = True):
+def circles(ns: int, radius: float, center: Tuple[float, float], n: int,
+            noise_perc: float = 0.0, outliers_perc: float = 0.0, homogeneous: bool = False,
+            shuffle: bool = True, outliers_bounded: bool = True):
     """
 
     :param ns: number of samples
@@ -151,15 +139,9 @@ def circles(ns: int,
                             outliers_bounded=outliers_bounded)
 
 
-def ellipse(semi_x_axis: float,
-            semi_y_axis: float,
-            center: Tuple[float, float],
-            n: int,
-            noise_perc: float = 0.0,
-            outliers_perc: float = 0.0,
-            homogeneous: bool = True,
-            shuffle: bool = True,
-            outliers_bounded: bool = True):
+def ellipse(semi_x_axis: float, semi_y_axis: float, center: Tuple[float, float],
+            n: int, noise_perc: float = 0.0, outliers_perc: float = 0.0, homogeneous: bool = True,
+            shuffle: bool = True, outliers_bounded: bool = True):
     """
     samples point from an ellipse.
     Equation is (x-x_0)^2/a^2 + (y-y_0)^2/b^2=1
@@ -213,15 +195,9 @@ def ellipse(semi_x_axis: float,
     return points
 
 
-def hyperbola(semi_x_axis: float,
-              semi_y_axis: float,
-              center: Tuple[float, float],
-              n: int,
-              noise_perc: float = 0.0,
-              outliers_perc: float = 0.0,
-              homogeneous: bool = True,
-              shuffle: bool = True,
-              outliers_bounded: bool = True):
+def hyperbola(semi_x_axis: float, semi_y_axis: float, center: Tuple[float, float],
+              n: int, noise_perc: float = 0.0, outliers_perc: float = 0.0, homogeneous: bool = True,
+              shuffle: bool = True, outliers_bounded: bool = True):
     """
     samples point from an ellipse
     :param semi_x_axis: length of the semi-axis on the abscissa, commonly colled 'a'
@@ -249,7 +225,7 @@ def hyperbola(semi_x_axis: float,
         # sample points on the x-axis in such a way they belong in the space of one of the two compontents
         x = random.uniform(x_0 + a, x_0 + 2 * math.sqrt(a**2 + b**2))
         x = x if random.random() < 0.5 else -x
-        # equation for sampling y:  y = sqrt( (((x-x_0)**2 / a**2)  -  1) * b**2) + y_0
+        # equation for sampling y:  y = sqrt((((x-x_0)**2 / a**2)  -  1) * b**2) + y_0
         sqrtarg = (((x - x_0) ** 2 / a ** 2) - 1) * b ** 2
         y = math.sqrt(sqrtarg)
         y = y if random.random() < 0.5 else -y  # choose positive or negative solution of the square root
@@ -279,19 +255,13 @@ def hyperbola(semi_x_axis: float,
     return points
 
 
-def parabola(a: float,
-             b: float,
-             c: float,
-             n: int,
-             theta: float = 0,
-             noise_perc: float = 0.0,
-             outliers_perc: float = 0.0,
-             homogeneous: bool = True,
-             shuffle: bool = True,
-             outliers_bounded: bool = True):
+def parabola(a: float, b: float, c: float, n: int, theta: float = 0,
+             noise_perc: float = 0.0, outliers_perc: float = 0.0, homogeneous: bool = True,
+             shuffle: bool = True, outliers_bounded: bool = True):
     """
     samples points from a parabola through equation y = ax^2 + bx + c. You can rotate the parabola specifying
     the rotation angle theta ( bounded between 0 and 2*pi).
+
     :param a:
     :param b:
     :param c:
@@ -344,14 +314,9 @@ def parabola(a: float,
     return points
 
 
-def line(point_1: Tuple[float, float],
-         point_2: Tuple[float, float],
-         n: int,
-         noise_perc: float = 0.0,
-         outliers_perc: float = 0.0,
-         homogeneous: bool = True,
-         shuffle: bool = True,
-         outliers_bounded: bool = True):
+def line(point_1: Tuple[float, float], point_2: Tuple[float, float],
+         n: int, noise_perc: float = 0.0, outliers_perc: float = 0.0,
+         homogeneous: bool = True, shuffle: bool = True, outliers_bounded: bool = True):
     """
     samples point from a line obtained by connecting two points
     :param point_1: (float, float)
@@ -400,15 +365,11 @@ def line(point_1: Tuple[float, float],
     return points
 
 
-def homography_v1(matrix: Union[List, np.array],
-                  n: int,
+def homography_v1(matrix: Union[List, np.array], n: int,
                   src_range_x: Tuple[float, float] = (-5, 5),
                   src_range_y: Tuple[float, float] = (-5, 5),
                   src_range_z: Tuple[float, float] = (-5, 5),
-                  outliers_perc: float = 0.0,
-                  noise_perc: float = 0.0,
-                  homogeneous: bool = True,
-                  shuffle: bool = True):
+                  outliers_perc: float = 0.0, noise_perc: float = 0.0, homogeneous: bool = True, shuffle: bool = True):
     """
     generates points belonging to homography specified as input
     :param matrix: list 3x3 or np.array with shape (3,3)
@@ -427,7 +388,7 @@ def homography_v1(matrix: Union[List, np.array],
     n_points = int(n * (1 - outliers_perc))
     n_outliers = n - n_points
 
-    # generate homography's points
+    # generate homography points
     x1s = np.random.uniform(low=(src_range_x[0], src_range_y[0], src_range_z[0]),
                             high=(src_range_x[1], src_range_y[1], src_range_z[1]),
                             size=(n_points, 2))  # todo why 2??
@@ -458,17 +419,9 @@ def homography_v1(matrix: Union[List, np.array],
     return points
 
 
-
-
-def homography(matrix: Union[List, np.array],
-              n: int,
-              src_range_x: Tuple[float, float] = (-5, 5),
-              src_range_y: Tuple[float, float] = (-5, 5),
-              src_range_z: Tuple[float, float] = (-5, 5),
-              outliers_perc: float = 0.0,
-              noise_perc: float = 0.0,
-              homogeneous: bool = True,
-              shuffle: bool = True):
+def homography(matrix: Union[List, np.array], n: int, src_range_x: Tuple[float, float] = (-5, 5),
+               src_range_y: Tuple[float, float] = (-5, 5), src_range_z: Tuple[float, float] = (-5, 5),
+               outliers_perc: float = 0.0, noise_perc: float = 0.0, homogeneous: bool = True, shuffle: bool = True):
     """
     generates points belonging to homography specified as input
     :param matrix: list 3x3 or np.array with shape (3,3)
@@ -499,9 +452,6 @@ def homography(matrix: Union[List, np.array],
 
     # generate camera projection
     x1p_org, x2p_org, K = simCamProj('uncalibrated', random_point_cloud, R, t)
-
-
-
 
 
 def homography_from_pointcloud(X: np.ndarray,
