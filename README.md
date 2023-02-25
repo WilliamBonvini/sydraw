@@ -173,12 +173,12 @@ hyperbola is not implemented yet.
 If you are not interested in generating huge datasets of data corrupted by outliers and noise, namely, if you just want to generate some points belonging to a specific model and retrieve such models coefficients, you can do as follows. 
 I'll show you an example using a circle, but there are analogous functions for the other conics
 
-```
+```python
 from syndalib import drawer
 ```
 ##### points generation
 generates 10 randomly sampled points from a user-specified circle.
-```
+```python
 circle = drawer.circle_points(r=3.0, c=(1.0,1.0), n=10)
 ```
 
@@ -198,7 +198,7 @@ The code above will generate a numpy array of 2D points in homogeneous coordinat
 
 
 ##### model coefficients generation
-```
+```python
 circle = drawer.circle_coefs(r=3.0, c=(1.0, 1.0), n=10)
 ```
 The code above will return a numpy array whose elemens are the coefficients of the corresponding conic.
