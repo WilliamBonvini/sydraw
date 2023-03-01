@@ -5,8 +5,8 @@ from typing import Tuple, List, Union
 
 from scipy.spatial.transform.rotation import Rotation
 
-from sydraw.package.sydraw.utils.cameraops import normalize, simCamProj, simCamTransform
-from sydraw.package.sydraw.utils.config import OPTS
+from syndalib.package.sydraw.utils.cameraops import normalize, simCamProj, simCamTransform
+from syndalib.package.sydraw.utils.config import OPTS
 
 """
 synth.circle

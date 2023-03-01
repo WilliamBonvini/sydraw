@@ -1,14 +1,13 @@
 from unittest import TestCase
-from tests import *
+from ..tests import *
 import numpy as np
-from syndalib.package import linalg
+from ..src import linalg
 import tensorflow as tf
 
 
 class Test(TestCase):
     def setUp(self) -> None:
         pass
-
 
     def test_conic_monomials(self):
         output = linalg.conic_monomials(circle_points_fixed)
@@ -48,15 +47,12 @@ class Test(TestCase):
         print(target_coefs)
         self.assertTrue((output_coefs == target_coefs).all())
 
-
     def test_dlt_coefs_both_args_nparray(self):
         coefs = linalg.dlt_coefs(circle_vandermonde_as_conic, circle_inliers_prob)
         target = circle_coefs_as_conic
         print("coefs = {}".format(coefs))
         print("target = {}".format(target))
         self.assertTrue(np.allclose(coefs, target))
-
-
 
     def test_dlt_coefs_both_args_tftensors(self):
         cvac = tf.constant(circle_vandermonde_as_conic)
@@ -66,12 +62,3 @@ class Test(TestCase):
         print("coefs = {}".format(coefs))
         print("target = {}".format(target))
         self.assertTrue(np.allclose(coefs, target))
-
-
-
-
-
-
-
-
-
