@@ -53,7 +53,6 @@ def checkExistenceAndCreate(path: string):
         os.mkdir(path)
 
 
-
 def convert_to_np_struct(inliers: List, outliers: List) -> np.ndarray:
     """
     merges list of inliers and list of outliers into an np.ndarray and returns it

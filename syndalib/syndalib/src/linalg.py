@@ -1,35 +1,41 @@
-from typing import Tuple
+from typing import Tuple, Union
 import numpy as np
+import tensorflow as tf
 
 
-def conic_monomials(points):
+def conic_monomials(points: np.array) -> np.array:
     """
-    given a set of points returns a matrix whose rows are the conic extensions for each point
-    specifically, the terms are:
-    x^2; xy; y^2; x; y; 1
 
-    :param points: np.array, (num_points,). points are represented in homogeneous coordinates (x,y,z=1)
+    For each row (a point in homogeneous coordinates) in input array, compute the conic monomials.
+
+    Input:
+    [[x1, y1, 1],
+     [x2, y2, 1]]
+
+    Output:
+    [[x1^2, x1y1, y1^2, x1, x2, 1],
+      x2^2, x2y2, y2^2, x2, x1, 1]]
+
+    :param points: np.array, (num_points, 3).
     :return: np.array, (num_points, 6)
     """
     n_points = points.shape[0]
     rows = np.zeros(shape=(n_points, 6))
-    for i in range(len(points)):
+    for i in range(n_points):
 
         x = points[i][0]
         y = points[i][1]
-        row = np.zeros(shape=(6,))
-        row[0] = x**2
-        row[1] = x*y
-        row[2] = y**2
-        row[3] = x
-        row[4] = y
-        row[5] = 1
-        rows[i, :] = row
+        rows[i, 0] = x**2
+        rows[i, 1] = x*y
+        rows[i, 2] = y**2
+        rows[i, 3] = x
+        rows[i, 4] = y
+        rows[i, 5] = 1
 
     return rows
 
 
-def circle_monomials(points):
+def circle_monomials(points: np.array):
     """
     given a set of points returns a matrix whose rows are the conic extensions for each point
     specifically, the terms are:
@@ -53,7 +59,7 @@ def circle_monomials(points):
     return rows
 
 
-def dlt_coefs(vandermonde,
+def dlt_coefs(vandermonde: Union[np.array, tf.Tensor],
               weights=None):
     """
     compute coefficients of a conic through direct linear mapping.

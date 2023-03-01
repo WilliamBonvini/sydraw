@@ -2,7 +2,7 @@ from unittest import TestCase
 
 import numpy as np
 
-from syndalib.package import synth
+from syndalib.src import synth
 
 
 class Test(TestCase):
@@ -62,7 +62,6 @@ class Test(TestCase):
                                                     "shuffle": True}
         self.args_with_outliers_and_shuffle_false = {"outliers_perc": self.outliers_perc,
                                                      "shuffle": False}
-
 
     def _retrieve_positional_args(self, foo):
         if foo.__name__ == 'circle':

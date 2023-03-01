@@ -3,18 +3,12 @@
 import click
 import log
 
-from . import utils
-
 
 @click.command()
 @click.argument('feet')
-def main(feet: str):
+def main(text: str):
     log.init()
-
-    meters = utils.feet_to_meters(feet)
-
-    if meters is not None:
-        click.echo(meters)
+    click.echo(text)
 
 
 if __name__ == '__main__':  # pragma: no cover

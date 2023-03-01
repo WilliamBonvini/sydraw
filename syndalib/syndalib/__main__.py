@@ -3,7 +3,7 @@
 """Package entry point."""
 
 
-from syndalib.src.cli import main
+from syndalib.cli import main
 
 
 if __name__ == '__main__':  # pragma: no cover

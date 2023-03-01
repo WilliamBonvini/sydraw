@@ -5,8 +5,8 @@ from typing import Tuple, List, Union
 
 from scipy.spatial.transform.rotation import Rotation
 
-from syndalib.package.sydraw.utils.cameraops import normalize, simCamProj, simCamTransform
-from syndalib.package.sydraw.utils.config import OPTS
+from syndalib.src.utils.cameraops import normalize, simCamProj, simCamTransform
+from syndalib.src.utils.config import OPTS
 
 """
 synth.circle
@@ -110,9 +110,14 @@ def circle(radius: float, center: Tuple[float, float], n: int,
     return points
 
 
-def circles(ns: int, radius: float, center: Tuple[float, float], n: int,
-            noise_perc: float = 0.0, outliers_perc: float = 0.0, homogeneous: bool = False,
-            shuffle: bool = True, outliers_bounded: bool = True):
+def circles(ns: int,
+            radius: float,
+            center: Tuple[float, float], n: int,
+            noise_perc: float = 0.0,
+            outliers_perc: float = 0.0,
+            homogeneous: bool = False,
+            shuffle: bool = True,
+            outliers_bounded: bool = True) -> np.array:
     """
 
     :param ns: number of samples
@@ -137,11 +142,18 @@ def circles(ns: int, radius: float, center: Tuple[float, float], n: int,
                             homogeneous=homogeneous,
                             shuffle=shuffle,
                             outliers_bounded=outliers_bounded)
+    return samples
 
 
-def ellipse(semi_x_axis: float, semi_y_axis: float, center: Tuple[float, float],
-            n: int, noise_perc: float = 0.0, outliers_perc: float = 0.0, homogeneous: bool = True,
-            shuffle: bool = True, outliers_bounded: bool = True):
+def ellipse(semi_x_axis: float,
+            semi_y_axis: float,
+            center: Tuple[float, float],
+            n: int,
+            noise_perc: float = 0.0,
+            outliers_perc: float = 0.0,
+            homogeneous: bool = True,
+            shuffle: bool = True,
+            outliers_bounded: bool = True) -> np.ndarray:
     """
     samples point from an ellipse.
     Equation is (x-x_0)^2/a^2 + (y-y_0)^2/b^2=1
@@ -195,9 +207,15 @@ def ellipse(semi_x_axis: float, semi_y_axis: float, center: Tuple[float, float],
     return points
 
 
-def hyperbola(semi_x_axis: float, semi_y_axis: float, center: Tuple[float, float],
-              n: int, noise_perc: float = 0.0, outliers_perc: float = 0.0, homogeneous: bool = True,
-              shuffle: bool = True, outliers_bounded: bool = True):
+def hyperbola(semi_x_axis: float,
+              semi_y_axis: float,
+              center: Tuple[float, float],
+              n: int,
+              noise_perc: float = 0.0,
+              outliers_perc: float = 0.0,
+              homogeneous: bool = True,
+              shuffle: bool = True,
+              outliers_bounded: bool = True) -> np.ndarray:
     """
     samples point from an ellipse
     :param semi_x_axis: length of the semi-axis on the abscissa, commonly colled 'a'
@@ -255,9 +273,16 @@ def hyperbola(semi_x_axis: float, semi_y_axis: float, center: Tuple[float, float
     return points
 
 
-def parabola(a: float, b: float, c: float, n: int, theta: float = 0,
-             noise_perc: float = 0.0, outliers_perc: float = 0.0, homogeneous: bool = True,
-             shuffle: bool = True, outliers_bounded: bool = True):
+def parabola(a: float,
+             b: float,
+             c: float,
+             n: int,
+             theta: float = 0,
+             noise_perc: float = 0.0,
+             outliers_perc: float = 0.0,
+             homogeneous: bool = True,
+             shuffle: bool = True,
+             outliers_bounded: bool = True) -> np.ndarray:
     """
     samples points from a parabola through equation y = ax^2 + bx + c. You can rotate the parabola specifying
     the rotation angle theta ( bounded between 0 and 2*pi).
