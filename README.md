@@ -1,4 +1,9 @@
 # syndalib
+
+[![PyPI License](https://img.shields.io/pypi/l/syndalib.svg)](https://pypi.org/project/syndalib)
+[![PyPI Version](https://img.shields.io/pypi/v/syndalib.svg)](https://pypi.org/project/syndalib)
+[![PyPI Downloads](https://img.shields.io/pypi/dm/syndalib.svg?color=orange)](https://pypistats.org/packages/syndalib)
+
 Syndalib (Synthetic Data Library) is a python library that helps you create synthetic 2D point clouds for single/multi-model single/multi-class tasks.  
 You'll be able to fix a set of hyperparameters for each class of models you are interested in generating.  
 Models are saved in a .mat file format.  
@@ -8,8 +13,6 @@ Single Class - Single Model                        |  Single Class -  Multi Mode
 :-------------------------------------------------:|:---------------------------------------------------:|:-------------------------------------------------:|
  <img src="media/imgs/scsm1.png" style="zoom:50%"> |  <img src="media/imgs/scmm1.png" style="zoom:50%">  |  <img src="media/imgs/mcmm1.png" style="zoom:50%">|
                         
-
-
 
 
 # setup
@@ -201,5 +204,6 @@ The code above will generate a numpy array of 2D points in homogeneous coordinat
 ```python
 circle = drawer.circle_coefs(r=3.0, c=(1.0, 1.0), n=10)
 ```
-The code above will return a numpy array whose elemens are the coefficients of the corresponding conic.
+The code above will return a numpy array whose elements are the coefficients of the corresponding conic.
 
+[▲ back to top](#syndalib)
