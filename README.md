@@ -14,11 +14,34 @@ Have a look at some samples:
 | <img src="docs/media/imgs/scsm1.png" style="zoom:50%"> |  <img src="docs/media/imgs/scmm1.png" style="zoom:50%">  |  <img src="docs/media/imgs/mcmm1.png" style="zoom:50%">|
                         
 
+## Setup
 
-# setup
-##### install with pip
-``` 
-pip install syndalib 
+### Requirements
+
+* Python 3.8+
+
+### Installation
+
+Install it directly into an activated virtual environment:
+
+```text
+$ pip install syndalib
+```
+
+or add it to your [Poetry](https://poetry.eustace.io/) project:
+
+```text
+$ poetry add syndalib
+```
+
+## Usage
+
+After installation, the package can be imported:
+
+```text
+$ python
+>>> import syndalib
+>>> syndalib.__version__
 ```
 
 # Datasets Generation
