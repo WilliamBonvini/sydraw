@@ -1,4 +1,9 @@
 # syndalib
+
+[![PyPI License](https://img.shields.io/pypi/l/syndalib.svg)](https://pypi.org/project/syndalib)
+[![PyPI Version](https://img.shields.io/pypi/v/syndalib.svg)](https://pypi.org/project/syndalib)
+[![PyPI Downloads](https://img.shields.io/pypi/dm/syndalib.svg?color=orange)](https://pypistats.org/packages/syndalib)
+
 Syndalib (Synthetic Data Library) is a python library that helps you create synthetic 2D point clouds for single/multi-model single/multi-class tasks.  
 You'll be able to fix a set of hyperparameters for each class of models you are interested in generating.  
 Models are saved in a .mat file format.  
@@ -9,9 +14,12 @@ Have a look at some samples:
 | <img src="docs/media/imgs/scsm1.png" style="zoom:50%"> |  <img src="docs/media/imgs/scmm1.png" style="zoom:50%">  |  <img src="docs/media/imgs/mcmm1.png" style="zoom:50%">|
                         
 
+
 # setup
 ##### install with pip
-``` pip install syndalib ```
+``` 
+pip install syndalib 
+```
 
 # Datasets Generation
 You can generate models of circles, lines and ellipses.  
@@ -170,12 +178,12 @@ hyperbola is not implemented yet.
 If you are not interested in generating huge datasets of data corrupted by outliers and noise, namely, if you just want to generate some points belonging to a specific model and retrieve such models coefficients, you can do as follows. 
 I'll show you an example using a circle, but there are analogous functions for the other conics
 
-```
+```python
 from syndalib import drawer
 ```
 ##### points generation
 generates 10 randomly sampled points from a user-specified circle.
-```
+```python
 circle = drawer.circle_points(r=3.0, c=(1.0,1.0), n=10)
 ```
 
@@ -195,8 +203,9 @@ The code above will generate a numpy array of 2D points in homogeneous coordinat
 
 
 ##### model coefficients generation
-```
+```python
 circle = drawer.circle_coefs(r=3.0, c=(1.0, 1.0), n=10)
 ```
-The code above will return a numpy array whose elemens are the coefficients of the corresponding conic.
+The code above will return a numpy array whose elements are the coefficients of the corresponding conic.
 
+[▲ back to top](#syndalib)
