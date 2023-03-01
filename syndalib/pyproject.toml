@@ -27,12 +27,12 @@ classifiers = [
 
 [tool.poetry.dependencies]
 
-python = "^3.8"
+python = "3.8"
 
 # Dependencies
 numpy = "*"
 scipy = "*"
-tensorflow = "*"
+tensorflow = "2.9.3"
 
 [tool.poetry.dev-dependencies]
 
