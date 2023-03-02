@@ -255,7 +255,7 @@ tests = ["asttokens", "pytest", "littleutils", "rich"]
 
 [[package]]
 name = "flatbuffers"
-version = "1.12"
+version = "23.1.21"
 description = "The FlatBuffers serialization format for Python"
 category = "main"
 optional = false
@@ -513,28 +513,11 @@ i18n = ["Babel (>=2.7)"]
 
 [[package]]
 name = "keras"
-version = "2.9.0"
+version = "2.11.0"
 description = "Deep learning for humans."
 category = "main"
 optional = false
-python-versions = "*"
-
-[[package]]
-name = "keras-preprocessing"
-version = "1.1.2"
-description = "Easy data preprocessing and data augmentation for deep learning models"
-category = "main"
-optional = false
-python-versions = "*"
-
-[package.dependencies]
-numpy = ">=1.9.1"
-six = ">=1.9.0"
-
-[package.extras]
-image = ["scipy (>=0.14)", "Pillow (>=5.2.0)"]
-pep8 = ["flake8"]
-tests = ["pandas", "pillow", "tensorflow", "keras", "pytest", "pytest-xdist", "pytest-cov"]
+python-versions = ">=3.7"
 
 [[package]]
 name = "kiwisolver"
@@ -1237,11 +1220,11 @@ tests = ["pytest", "typeguard", "pygments", "littleutils", "cython"]
 
 [[package]]
 name = "tensorboard"
-version = "2.9.1"
+version = "2.11.2"
 description = "TensorBoard lets you watch Tensors Flow"
 category = "main"
 optional = false
-python-versions = ">=3.6"
+python-versions = ">=3.7"
 
 [package.dependencies]
 absl-py = ">=0.4"
@@ -1250,7 +1233,7 @@ google-auth-oauthlib = ">=0.4.1,<0.5"
 grpcio = ">=1.24.3"
 markdown = ">=2.6.8"
 numpy = ">=1.12.0"
-protobuf = ">=3.9.2,<3.20"
+protobuf = ">=3.9.2,<4"
 requests = ">=2.21.0,<3"
 tensorboard-data-server = ">=0.6.0,<0.7.0"
 tensorboard-plugin-wit = ">=1.6.0"
@@ -1274,7 +1257,7 @@ python-versions = "*"
 
 [[package]]
 name = "tensorflow"
-version = "2.9.3"
+version = "2.11.0"
 description = "TensorFlow is an open source machine learning framework for everyone."
 category = "main"
 optional = false
@@ -1283,29 +1266,28 @@ python-versions = ">=3.7"
 [package.dependencies]
 absl-py = ">=1.0.0"
 astunparse = ">=1.6.0"
-flatbuffers = ">=1.12,<2"
+flatbuffers = ">=2.0"
 gast = ">=0.2.1,<=0.4.0"
 google-pasta = ">=0.1.1"
 grpcio = ">=1.24.3,<2.0"
 h5py = ">=2.9.0"
-keras = ">=2.9.0rc0,<2.10.0"
-keras-preprocessing = ">=1.1.1"
+keras = ">=2.11.0,<2.12"
 libclang = ">=13.0.0"
 numpy = ">=1.20"
 opt-einsum = ">=2.3.2"
 packaging = "*"
 protobuf = ">=3.9.2,<3.20"
 six = ">=1.12.0"
-tensorboard = ">=2.9,<2.10"
-tensorflow-estimator = ">=2.9.0rc0,<2.10.0"
-tensorflow-io-gcs-filesystem = ">=0.23.1"
+tensorboard = ">=2.11,<2.12"
+tensorflow-estimator = ">=2.11.0,<2.12"
+tensorflow-io-gcs-filesystem = {version = ">=0.23.1", markers = "platform_machine != \"arm64\" or platform_system != \"Darwin\""}
 termcolor = ">=1.1.0"
 typing-extensions = ">=3.6.6"
 wrapt = ">=1.11.0"
 
 [[package]]
 name = "tensorflow-estimator"
-version = "2.9.0"
+version = "2.11.0"
 description = "TensorFlow Estimator."
 category = "main"
 optional = false
@@ -1441,8 +1423,8 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "flake8 (<5)", "pytest-co
 
 [metadata]
 lock-version = "1.1"
-python-versions = "3.8"
-content-hash = "4687f3d8b26b1f7f0aa474d0497b7c009f8de757d1db20a47334ea4ad5ccfb46"
+python-versions = "3.9.10"
+content-hash = "5dca9f109ad1910eb29a441f2e8426d865ead4b1df8c4a73077e77ad6a124651"
 
 [metadata.files]
 absl-py = []
@@ -1487,7 +1469,6 @@ isort = []
 jedi = []
 jinja2 = []
 keras = []
-keras-preprocessing = []
 kiwisolver = []
 lazy-object-proxy = []
 libclang = []
