@@ -2,7 +2,6 @@ from unittest import TestCase
 from ..tests import *
 import numpy as np
 from ..src import linalg
-import tensorflow as tf
 
 
 class Test(TestCase):
@@ -54,11 +53,3 @@ class Test(TestCase):
         print("target = {}".format(target))
         self.assertTrue(np.allclose(coefs, target))
 
-    def test_dlt_coefs_both_args_tftensors(self):
-        cvac = tf.constant(circle_vandermonde_as_conic)
-        cip = tf.constant(circle_inliers_prob)
-        coefs = linalg.dlt_coefs(cvac, cip)
-        target = circle_coefs_as_conic
-        print("coefs = {}".format(coefs))
-        print("target = {}".format(target))
-        self.assertTrue(np.allclose(coefs, target))

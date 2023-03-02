@@ -1,6 +1,5 @@
 from typing import Tuple, Union
 import numpy as np
-import tensorflow as tf
 
 
 def conic_monomials(points: np.array) -> np.array:
@@ -59,17 +58,16 @@ def circle_monomials(points: np.array):
     return rows
 
 
-def dlt_coefs(vandermonde: Union[np.array, tf.Tensor],
-              weights=None):
+def dlt_coefs(vandermonde: np.array,
+              weights: np.array = None) -> np.ndarray:
     """
-    compute coefficients of a conic through direct linear mapping.
-    vandermonde and weights arguments should be or both np.ndarrays or both tf.tensors
+    compute coefficients of a conic through Direct Linear Transformation.
 
 
     :param vandermonde: (number of points, number of monomials),np.array or tf.tensor. each row contains monomials (e.g. for a conic: x^2 xy y^2 x y 1) of the corresponding point
     :param weights: (number of points,) np.array or tf.tensor. probability of belonging to the model for each row in the vandermonde matrix.
                     if all points belong to the model don't specify its value.
-    :return: np.ndarray or tf.tensor (depending on the value of the parameter "type"), (number of monomials,), the coefficients computed via dlt
+    :return: np.ndarray, (number of monomials,), the coefficients computed via dlt
     """
 
     weights = weights + np.random.normal(0, 1e-9)
