@@ -1,12 +1,14 @@
-# sydraw
+# Sydraw
+
+<h1 align="center">
+<img src="https://github.com/WilliamBonvini/sydraw/raw/master/docs/media/imgs/sydraw.jpeg" width="150">
+</h1><br>
+
 
 [![PyPI License](https://img.shields.io/pypi/l/sydraw.svg)](https://pypi.org/project/sydraw)
 [![PyPI Version](https://img.shields.io/pypi/v/sydraw.svg)](https://pypi.org/project/sydraw)
 [![PyPI Downloads](https://img.shields.io/pypi/dm/sydraw.svg?color=orange)](https://pypistats.org/packages/sydraw)
 
-<figure style="text-align:center">
-    <img src ="https://github.com/WilliamBonvini/sydraw/raw/master/docs/media/imgs/sydraw.jpeg" style="zoom:5%"">
-</figure>
 Sydraw is a python library that helps you create synthetic 2D point clouds for single/multi-model single/multi-class tasks.  
 It gives you the possibility to fix a set of hyper-parameters (i.e. outliers percentage, noise) for the parametric models you want to generate.  
 
