@@ -1,12 +1,11 @@
-from scipy.spatial.transform import Rotation
-import numpy as np
 import pickle
+
+import numpy as np
 import numpy.matlib
+from scipy.spatial.transform import Rotation
 
 
-def simCamTransform(motion: str,
-                    X: np.ndarray,
-                    rotation_threshold: float = 0.8):
+def simCamTransform(motion: str, X: np.ndarray, rotation_threshold: float = 0.8):
     """
 
     generation the rotation matrix and translation vector to apply a certain transformation (motion) to a point cloud
@@ -17,19 +16,18 @@ def simCamTransform(motion: str,
             rotation matrix, np.ndarray, (3,3)
             translation vector, np.ndarray, (3,1)
     """
-    if motion == 'rotation':
-        angles = rotation_threshold * (0.5 - np.random.rand(1, 3))  # it was 0.8, it has been 1.5 to train the single model, but I now parametrized (I'll start by using 0.8 again)
-        R2 = Rotation.from_euler('zyx', angles, degrees=False)
+    if motion == "rotation":
+        angles = rotation_threshold * (
+            0.5 - np.random.rand(1, 3)
+        )  # it was 0.8, it has been 1.5 to train the single model, but I now parametrized (I'll start by using 0.8 again)
+        R2 = Rotation.from_euler("zyx", angles, degrees=False)
         R2 = R2.as_matrix()[0]
         T2 = np.zeros((3, 1))
 
         return R2, T2
 
 
-def simCamProj(camproj: str,
-               X: np.ndarray,
-               R: np.ndarray,
-               t: np.ndarray):
+def simCamProj(camproj: str, X: np.ndarray, R: np.ndarray, t: np.ndarray):
     """
     generates a pair of 2D camera projections from a 3D point cloud.
     the first one is simply the projection on the z=1 plane of the point cloud.
@@ -45,12 +43,10 @@ def simCamProj(camproj: str,
         K, intrinsic matrix np.ndarray (3,3)
     """
 
-    if camproj == 'uncalibrated':
+    if camproj == "uncalibrated":
         f = 0.25 + 5 * np.random.rand(1, 1)
 
-        P1 = np.array([[1, 0, 0, 0],
-                       [0, 1, 0, 0],
-                       [0, 0, 1, 0]])
+        P1 = np.array([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0]])
 
         P2 = np.concatenate((np.transpose(R), np.matmul(-np.transpose(R), t)), axis=1)
 
@@ -70,8 +66,7 @@ def simCamProj(camproj: str,
         return x1, x2, K
 
 
-def normalize(x: np.ndarray,
-              alpha: float):
+def normalize(x: np.ndarray, alpha: float):
     """
 
     :param x: 2d point cloud, np.ndarray, (2, npts)
@@ -89,22 +84,17 @@ def normalize(x: np.ndarray,
     x_out[0, :] = x_out[0, :] / alpha
 
     # scaling in such a way that the RMS distance from the origin is sqrt(2) --> the "average point" is (1,1)
-    d1 = np.mean(np.sqrt(np.sum(x_out ** 2, axis=0)))
+    d1 = np.mean(np.sqrt(np.sum(x_out**2, axis=0)))
     s = np.sqrt(2) / d1
     x_out = x_out * s
 
     # compute T (transformation matrix to de-normalize x_out)
-    A = np.array([[s, 0, 0],
-                  [0, s, 0],
-                  [0, 0, 1]])
+    A = np.array([[s, 0, 0], [0, s, 0], [0, 0, 1]])
 
-    B = np.array([[1/alpha, 0, -t[0] / alpha],
-                  [      0, 1,         -t[1]],
-                  [      0, 0,            1]])
+    B = np.array([[1 / alpha, 0, -t[0] / alpha], [0, 1, -t[1]], [0, 0, 1]])
 
     TN = np.matmul(A, B)
     return x_out, TN
-
 
 
 def residual(x1, x2, Hn):
@@ -132,7 +122,7 @@ def save_obj(obj, name):
     :param name: path to file
     :return:
     """
-    with open(name + '.pkl', 'wb') as f:
+    with open(name + ".pkl", "wb") as f:
         pickle.dump(obj, f, pickle.HIGHEST_PROTOCOL)
 
 
@@ -142,6 +132,5 @@ def load_obj(name):
     :param name: path to pkl file
     :return: loaded object
     """
-    with open(name + '.pkl', 'rb') as f:
+    with open(name + ".pkl", "rb") as f:
         return pickle.load(f)
-

@@ -1,10 +1,10 @@
+import os
+import random as rand
 import string
 from math import floor
 from typing import List, Tuple
 
 import matplotlib.pyplot as plt
-import random as rand
-import os
 import numpy as np
 
 

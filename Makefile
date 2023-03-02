@@ -22,6 +22,10 @@ run: install ## Start the program
 shell: install ## Launch an IPython session
 	poetry run ipython --ipython-dir=notebooks
 
+.PHONY: jupyter
+jupyter: install
+	poetry run jupyter notebook
+
 # SYSTEM DEPENDENCIES #########################################################
 
 .PHONY: doctor

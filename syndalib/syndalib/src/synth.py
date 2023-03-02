@@ -1,12 +1,12 @@
 import math
 import random
-import numpy as np
-from typing import Tuple, List, Union
+from typing import List, Tuple, Union
 
+import numpy as np
 from scipy.spatial.transform.rotation import Rotation
 
-from syndalib.src.utils.cameraops import normalize, simCamProj, simCamTransform
-from syndalib.src.utils.config import OPTS
+from syndalib.syndalib.src.utils.cameraops import normalize, simCamProj, simCamTransform
+from syndalib.syndalib.src.utils.config import OPTS
 
 """
 synth.circle
@@ -24,7 +24,12 @@ synth.homographies
 """
 
 
-def outliers(x_range: Tuple[float, float], y_range: Tuple[float, float], n: int, homogeneous: bool = True):
+def outliers(
+    x_range: Tuple[float, float],
+    y_range: Tuple[float, float],
+    n: int,
+    homogeneous: bool = True,
+):
     """
     generates outliers in a user specified 2D square
 
@@ -54,9 +59,16 @@ def outliers(x_range: Tuple[float, float], y_range: Tuple[float, float], n: int,
     return np.array(outliers_points, dtype=float)
 
 
-def circle(radius: float, center: Tuple[float, float], n: int,
-           noise_perc: float = 0.0, outliers_perc: float = 0.0,
-           homogeneous: bool = False, shuffle: bool = True, outliers_bounded: bool = True):
+def circle(
+    radius: float,
+    center: Tuple[float, float],
+    n: int,
+    noise_perc: float = 0.0,
+    outliers_perc: float = 0.0,
+    homogeneous: bool = False,
+    separate: bool = False,
+    outliers_bounded: bool = True,
+) -> np.ndarray:
     """
     generates circle points given radius and center.
     if outliers_perc = 0 it will return a np.array.
@@ -70,8 +82,7 @@ def circle(radius: float, center: Tuple[float, float], n: int,
     :param noise_perc: gaussian noise standard deviation
     :param outliers_perc: percentage of outliers out of n data points
     :param homogeneous: bool, if True returns homogeneous coordinates, otherwise euclidean coordinates, default is False
-    :param shuffle: bool, if True shuffles outliers with data, otherwise method returns one np.array for conic and one
-                    for outliers
+    :param separate: bool, if True shuffles outliers with data, otherwise returns a tuple of np.arrays (inliers, outliers)
     :param outliers_bounded: bool, if True outliers are bounded within the borders of the curve, otherwise they assume
                              values defined in configuration, default is True.
     :return: np array [(x_1,y_1,1),...,(x_np,y_np,1)] or pair of np.arrays
@@ -95,65 +106,81 @@ def circle(radius: float, center: Tuple[float, float], n: int,
 
     # generate outliers
     if n_outliers > 0:
-        x_range = (center[0] - radius, center[0] + radius) if outliers_bounded else OPTS["outliers"]["x_r"]
-        y_range = (center[1] - radius, center[1] + radius) if outliers_bounded else OPTS["outliers"]["y_r"]
-        outliers_points = outliers(x_range=x_range, y_range=y_range, n=n_outliers, homogeneous=homogeneous)
+        x_range = (
+            (center[0] - radius, center[0] + radius)
+            if outliers_bounded
+            else OPTS["outliers"]["x_r"]
+        )
+        y_range = (
+            (center[1] - radius, center[1] + radius)
+            if outliers_bounded
+            else OPTS["outliers"]["y_r"]
+        )
+        outliers_points = outliers(
+            x_range=x_range, y_range=y_range, n=n_outliers, homogeneous=homogeneous
+        )
         # process data for output
-        if shuffle:
-                output = np.concatenate((points, outliers_points))
-                np.random.shuffle(output)
-        else:
-            output = points, outliers_points
+        if separate:
+            points = points, outliers_points
 
-        return output
+        else:
+            points = np.concatenate((points, outliers_points))
+            np.random.shuffle(points)
 
     return points
 
 
-def circles(ns: int,
-            radius: float,
-            center: Tuple[float, float], n: int,
-            noise_perc: float = 0.0,
-            outliers_perc: float = 0.0,
-            homogeneous: bool = False,
-            shuffle: bool = True,
-            outliers_bounded: bool = True) -> np.array:
+def circles(
+    ns: int,
+    radius: float,
+    center: Tuple[float, float],
+    n: int,
+    noise_perc: float = 0.0,
+    outliers_perc: float = 0.0,
+    homogeneous: bool = False,
+    outliers_bounded: bool = True,
+) -> np.array:
     """
 
-    :param ns: number of samples
-    :param radius:
-    :param center:
-    :param n:
-    :param noise_perc:
-    :param outliers_perc:
-    :param homogeneous:
-    :param shuffle:
-    :param outliers_bounded:
+    :param radius: radius
+    :param center: center (x,y)
+    :param n: number of points
+    :param noise_perc: gaussian noise standard deviation
+    :param outliers_perc: percentage of outliers out of n data points
+    :param homogeneous: bool, if True returns homogeneous coordinates, otherwise euclidean coordinates, default is False
+    :param outliers_bounded: bool, if True outliers are bounded within the borders of the curve, otherwise they assume
+                             values defined in configuration, default is True.
     :return: np.array, shape (ns, n, num coordinates)
     """
-    samples = np.zeros((ns, n, 3 if homogeneous else 2))
+
+    dim = 3 if homogeneous else 2
+    samples = np.zeros((ns, n, dim))
 
     for i in range(ns):
-        samples[i] = circle(radius=radius,
-                            center=center,
-                            n=n,
-                            noise_perc=noise_perc,
-                            outliers_perc=outliers_perc,
-                            homogeneous=homogeneous,
-                            shuffle=shuffle,
-                            outliers_bounded=outliers_bounded)
+        samples[i] = circle(
+            radius=radius,
+            center=center,
+            n=n,
+            noise_perc=noise_perc,
+            outliers_perc=outliers_perc,
+            homogeneous=homogeneous,
+            separate=False,
+            outliers_bounded=outliers_bounded,
+        )
     return samples
 
 
-def ellipse(semi_x_axis: float,
-            semi_y_axis: float,
-            center: Tuple[float, float],
-            n: int,
-            noise_perc: float = 0.0,
-            outliers_perc: float = 0.0,
-            homogeneous: bool = True,
-            shuffle: bool = True,
-            outliers_bounded: bool = True) -> np.ndarray:
+def ellipse(
+    semi_x_axis: float,
+    semi_y_axis: float,
+    center: Tuple[float, float],
+    n: int,
+    noise_perc: float = 0.0,
+    outliers_perc: float = 0.0,
+    homogeneous: bool = True,
+    separate: bool = True,
+    outliers_bounded: bool = True,
+) -> np.ndarray:
     """
     samples point from an ellipse.
     Equation is (x-x_0)^2/a^2 + (y-y_0)^2/b^2=1
@@ -164,7 +191,7 @@ def ellipse(semi_x_axis: float,
     :param noise_perc: gaussian noise standard deviation, default is 0.0
     :param outliers_perc:
     :param homogeneous: bool, if true returns homogeneous coordinates, otherwise euclidean coordinates, default is true
-    :param shuffle: bool,
+    :param separate: bool,
     :param outliers_bounded: bool,
     :return: np.array, shape = (n, n_coords)
     """
@@ -182,8 +209,10 @@ def ellipse(semi_x_axis: float,
     for _ in range(n_points):
         x = random.uniform(*x_sampling_interval)
         # equation for sampling y: y = sqrt((1-((x-x_0)**2)/a**2)*b**2) + y_0
-        y = math.sqrt((1 - ((x - x_0) ** 2 / a ** 2)) * b ** 2)
-        y = y if random.random() < 0.5 else -y  # choose positive or negative solution of the square root
+        y = math.sqrt((1 - ((x - x_0) ** 2 / a**2)) * b**2)
+        y = (
+            y if random.random() < 0.5 else -y
+        )  # choose positive or negative solution of the square root
         y = y + y_0 + np.random.normal(0, noise_perc)
         x = x + np.random.normal(0, noise_perc)
         if homogeneous:
@@ -194,11 +223,21 @@ def ellipse(semi_x_axis: float,
 
     # generate outliers
     if n_outliers > 0:
-        x_range = (center[0] - a, center[0] + a) if outliers_bounded else OPTS["outliers"]["x_r"]
-        y_range = (center[1] - b, center[1] + b) if outliers_bounded else OPTS["outliers"]["y_r"]
-        outliers_points = outliers(x_range=x_range, y_range=y_range, n=n_outliers, homogeneous=homogeneous)
+        x_range = (
+            (center[0] - a, center[0] + a)
+            if outliers_bounded
+            else OPTS["outliers"]["x_r"]
+        )
+        y_range = (
+            (center[1] - b, center[1] + b)
+            if outliers_bounded
+            else OPTS["outliers"]["y_r"]
+        )
+        outliers_points = outliers(
+            x_range=x_range, y_range=y_range, n=n_outliers, homogeneous=homogeneous
+        )
         # process data for output
-        if shuffle:
+        if not separate:
             output = np.concatenate((points, outliers_points))
             np.random.shuffle(output)
         else:
@@ -207,15 +246,17 @@ def ellipse(semi_x_axis: float,
     return points
 
 
-def hyperbola(semi_x_axis: float,
-              semi_y_axis: float,
-              center: Tuple[float, float],
-              n: int,
-              noise_perc: float = 0.0,
-              outliers_perc: float = 0.0,
-              homogeneous: bool = True,
-              shuffle: bool = True,
-              outliers_bounded: bool = True) -> np.ndarray:
+def hyperbola(
+    semi_x_axis: float,
+    semi_y_axis: float,
+    center: Tuple[float, float],
+    n: int,
+    noise_perc: float = 0.0,
+    outliers_perc: float = 0.0,
+    homogeneous: bool = True,
+    separate: bool = True,
+    outliers_bounded: bool = True,
+) -> np.ndarray:
     """
     samples point from an ellipse
     :param semi_x_axis: length of the semi-axis on the abscissa, commonly colled 'a'
@@ -225,7 +266,7 @@ def hyperbola(semi_x_axis: float,
     :param noise_perc: gaussian noise standard deviation, default is 0.0
     :param outliers_perc:
     :param homogeneous: bool, if true returns homogeneous coordinates, otherwise euclidean coordinates, default is true
-    :param shuffle: bool,
+    :param separate: bool,
     :param outliers_bounded: bool,
     :return: np.array, shape = (n, n_coords)
     """
@@ -235,7 +276,7 @@ def hyperbola(semi_x_axis: float,
     b = semi_y_axis
     (x_0, y_0) = center
     points = []
-    n_points = int(n * (1-outliers_perc))
+    n_points = int(n * (1 - outliers_perc))
     n_outliers = n - n_points
 
     # generate hyperbola's points
@@ -244,9 +285,11 @@ def hyperbola(semi_x_axis: float,
         x = random.uniform(x_0 + a, x_0 + 2 * math.sqrt(a**2 + b**2))
         x = x if random.random() < 0.5 else -x
         # equation for sampling y:  y = sqrt((((x-x_0)**2 / a**2)  -  1) * b**2) + y_0
-        sqrtarg = (((x - x_0) ** 2 / a ** 2) - 1) * b ** 2
+        sqrtarg = (((x - x_0) ** 2 / a**2) - 1) * b**2
         y = math.sqrt(sqrtarg)
-        y = y if random.random() < 0.5 else -y  # choose positive or negative solution of the square root
+        y = (
+            y if random.random() < 0.5 else -y
+        )  # choose positive or negative solution of the square root
         y = y + y_0 + np.random.normal(0, noise_perc)
         x = x + np.random.normal(0, noise_perc)
         if homogeneous:
@@ -261,9 +304,11 @@ def hyperbola(semi_x_axis: float,
         y_outliers_range = (min(points[:, 1]), max(points[:, 1]))
         x_range = x_outliers_range if outliers_bounded else OPTS["outliers"]["x_r"]
         y_range = y_outliers_range if outliers_bounded else OPTS["outliers"]["y_r"]
-        outliers_points = outliers(x_range=x_range, y_range=y_range, n=n_outliers, homogeneous=homogeneous)
+        outliers_points = outliers(
+            x_range=x_range, y_range=y_range, n=n_outliers, homogeneous=homogeneous
+        )
         # process data for output
-        if shuffle:
+        if not separate:
             output = np.concatenate((points, outliers_points))
             np.random.shuffle(output)
         else:
@@ -273,16 +318,18 @@ def hyperbola(semi_x_axis: float,
     return points
 
 
-def parabola(a: float,
-             b: float,
-             c: float,
-             n: int,
-             theta: float = 0,
-             noise_perc: float = 0.0,
-             outliers_perc: float = 0.0,
-             homogeneous: bool = True,
-             shuffle: bool = True,
-             outliers_bounded: bool = True) -> np.ndarray:
+def parabola(
+    a: float,
+    b: float,
+    c: float,
+    n: int,
+    theta: float = 0,
+    noise_perc: float = 0.0,
+    outliers_perc: float = 0.0,
+    homogeneous: bool = True,
+    separate: bool = True,
+    outliers_bounded: bool = True,
+) -> np.ndarray:
     """
     samples points from a parabola through equation y = ax^2 + bx + c. You can rotate the parabola specifying
     the rotation angle theta ( bounded between 0 and 2*pi).
@@ -295,7 +342,7 @@ def parabola(a: float,
     :param noise_perc: gaussian noise standard deviation, default is 0.0
     :param outliers_perc:
     :param homogeneous: bool, if true returns homogeneous coordinates, otherwise euclidean coordinates, default is true
-    :param shuffle: bool,
+    :param separate: bool,
     :param outliers_bounded: bool,
     :return: np.array, shape = (n, n_coords)
     """
@@ -304,14 +351,14 @@ def parabola(a: float,
     points = []
     n_points = int(n * (1 - outliers_perc))
     n_outliers = n - n_points
-    x_vertex = - b / 2*a
+    x_vertex = -b / 2 * a
     amplitude = 2 / (0.1 + a)
     x_sampling_interval = (x_vertex - amplitude, x_vertex + amplitude)
 
     # generate parabola's points
     for _ in range(n_points):
         x = random.uniform(*x_sampling_interval)
-        y = a*x**2 + b*x + c
+        y = a * x**2 + b * x + c
         xp = x * math.cos(theta) - y * math.sin(theta) + np.random.normal(0, noise_perc)
         yp = y * math.cos(theta) + x * math.sin(theta) + np.random.normal(0, noise_perc)
 
@@ -323,14 +370,22 @@ def parabola(a: float,
 
     # generate outliers
     if n_outliers > 0:
-        x_outliers_range = (min(point[0] for point in points), max(point[0] for point in points))
-        y_outliers_range = (min(point[1] for point in points), max(point[1] for point in points))
+        x_outliers_range = (
+            min(point[0] for point in points),
+            max(point[0] for point in points),
+        )
+        y_outliers_range = (
+            min(point[1] for point in points),
+            max(point[1] for point in points),
+        )
         x_range = x_outliers_range if outliers_bounded else OPTS["outliers"]["x_r"]
         y_range = y_outliers_range if outliers_bounded else OPTS["outliers"]["y_r"]
-        outliers_points = outliers(x_range=x_range, y_range=y_range, n=n_outliers, homogeneous=homogeneous)
+        outliers_points = outliers(
+            x_range=x_range, y_range=y_range, n=n_outliers, homogeneous=homogeneous
+        )
 
         # process data for output
-        if shuffle:
+        if not separate:
             output = np.concatenate((points, outliers_points))
             np.random.shuffle(output)
         else:
@@ -339,9 +394,16 @@ def parabola(a: float,
     return points
 
 
-def line(point_1: Tuple[float, float], point_2: Tuple[float, float],
-         n: int, noise_perc: float = 0.0, outliers_perc: float = 0.0,
-         homogeneous: bool = True, shuffle: bool = True, outliers_bounded: bool = True):
+def line(
+    point_1: Tuple[float, float],
+    point_2: Tuple[float, float],
+    n: int,
+    noise_perc: float = 0.0,
+    outliers_perc: float = 0.0,
+    homogeneous: bool = True,
+    separate: bool = True,
+    outliers_bounded: bool = True,
+):
     """
     samples point from a line obtained by connecting two points
     :param point_1: (float, float)
@@ -350,7 +412,7 @@ def line(point_1: Tuple[float, float], point_2: Tuple[float, float],
     :param noise_perc: gaussian noise standard deviation, default is 0.0
     :param outliers_perc:
     :param homogeneous: bool, if true returns homogeneous coordinates, otherwise euclidean coordinates, default is true
-    :param shuffle: bool,
+    :param separate: bool,
     :param outliers_bounded: bool,
     :return: np.array, shape = (n, n_coords)
     """
@@ -358,8 +420,8 @@ def line(point_1: Tuple[float, float], point_2: Tuple[float, float],
     # setup
     x1, y1 = point_1
     x2, y2 = point_2
-    m = (y1-y2)/(x1-x2)
-    q = y1-m*x1
+    m = (y1 - y2) / (x1 - x2)
+    q = y1 - m * x1
     points = []
     n_points = int(n * (1 - outliers_perc))
     n_outliers = n - n_points
@@ -367,7 +429,7 @@ def line(point_1: Tuple[float, float], point_2: Tuple[float, float],
     # generate line's points
     for _ in range(n_points):
         x = random.uniform(point_1[0], point_2[0])
-        y = m*x + q + np.random.normal(0, noise_perc)
+        y = m * x + q + np.random.normal(0, noise_perc)
         if homogeneous:
             points.append((x, y, 1))
         else:
@@ -376,12 +438,22 @@ def line(point_1: Tuple[float, float], point_2: Tuple[float, float],
 
     # generate outliers
     if n_outliers > 0:
-        x_range = (min(points[:, 0]), max(points[:, 0])) if outliers_bounded else OPTS["outliers"]["x_r"]
-        y_range = (min(points[:, 1]), max(points[:, 1])) if outliers_bounded else OPTS["outliers"]["y_r"]
-        outliers_points = outliers(x_range=x_range, y_range=y_range, n=n_outliers, homogeneous=homogeneous)
+        x_range = (
+            (min(points[:, 0]), max(points[:, 0]))
+            if outliers_bounded
+            else OPTS["outliers"]["x_r"]
+        )
+        y_range = (
+            (min(points[:, 1]), max(points[:, 1]))
+            if outliers_bounded
+            else OPTS["outliers"]["y_r"]
+        )
+        outliers_points = outliers(
+            x_range=x_range, y_range=y_range, n=n_outliers, homogeneous=homogeneous
+        )
 
         # process data for output
-        if shuffle:
+        if not separate:
             output = np.concatenate((points, outliers_points))
             np.random.shuffle(output)
         else:
@@ -390,11 +462,17 @@ def line(point_1: Tuple[float, float], point_2: Tuple[float, float],
     return points
 
 
-def homography_v1(matrix: Union[List, np.array], n: int,
-                  src_range_x: Tuple[float, float] = (-5, 5),
-                  src_range_y: Tuple[float, float] = (-5, 5),
-                  src_range_z: Tuple[float, float] = (-5, 5),
-                  outliers_perc: float = 0.0, noise_perc: float = 0.0, homogeneous: bool = True, shuffle: bool = True):
+def homography_v1(
+    matrix: Union[List, np.array],
+    n: int,
+    src_range_x: Tuple[float, float] = (-5, 5),
+    src_range_y: Tuple[float, float] = (-5, 5),
+    src_range_z: Tuple[float, float] = (-5, 5),
+    outliers_perc: float = 0.0,
+    noise_perc: float = 0.0,
+    homogeneous: bool = True,
+    separate: bool = True,
+):
     """
     generates points belonging to homography specified as input
     :param matrix: list 3x3 or np.array with shape (3,3)
@@ -405,7 +483,7 @@ def homography_v1(matrix: Union[List, np.array], n: int,
     :param outliers_perc:
     :param noise_perc:
     :param homogeneous:
-    :param shuffle:
+    :param separate:
     :return:
     """
 
@@ -414,14 +492,20 @@ def homography_v1(matrix: Union[List, np.array], n: int,
     n_outliers = n - n_points
 
     # generate homography points
-    x1s = np.random.uniform(low=(src_range_x[0], src_range_y[0], src_range_z[0]),
-                            high=(src_range_x[1], src_range_y[1], src_range_z[1]),
-                            size=(n_points, 2))  # todo why 2??
+    x1s = np.random.uniform(
+        low=(src_range_x[0], src_range_y[0], src_range_z[0]),
+        high=(src_range_x[1], src_range_y[1], src_range_z[1]),
+        size=(n_points, 2),
+    )  # todo why 2??
     x1s = x1s / x1s[:, 2]
     x2s = np.matmul(x1s, matrix)
     x2s = x2s / x2s[:, 2]
-    x1s[:, 0:2] = x1s[:, 0:2] + np.random.normal(loc=0, scale=noise_perc, size=(n_points, 2))  # add noise
-    x2s[:, 0:2] = x2s[:, 0:2] + np.random.normal(loc=0, scale=noise_perc, size=(n_points, 2))  # add noise
+    x1s[:, 0:2] = x1s[:, 0:2] + np.random.normal(
+        loc=0, scale=noise_perc, size=(n_points, 2)
+    )  # add noise
+    x2s[:, 0:2] = x2s[:, 0:2] + np.random.normal(
+        loc=0, scale=noise_perc, size=(n_points, 2)
+    )  # add noise
     if homogeneous:
         points = np.concatenate((x1s, x2s))
     else:
@@ -429,13 +513,15 @@ def homography_v1(matrix: Union[List, np.array], n: int,
 
     # generate outliers
     if n_outliers > 0:
-        outliers_points = np.random.uniform(low=(src_range_x[0], src_range_y[0], src_range_z[0]),
-                                            high=(src_range_x[1], src_range_y[1], src_range_z[1]),
-                                            size=(n_outliers, 2))
+        outliers_points = np.random.uniform(
+            low=(src_range_x[0], src_range_y[0], src_range_z[0]),
+            high=(src_range_x[1], src_range_y[1], src_range_z[1]),
+            size=(n_outliers, 2),
+        )
         outliers_points = outliers_points / outliers_points[:, 2]
 
         # process data for output
-        if shuffle:
+        if separate:
             output = np.concatenate((points, outliers_points))
             np.random.shuffle(output)
         else:
@@ -444,9 +530,17 @@ def homography_v1(matrix: Union[List, np.array], n: int,
     return points
 
 
-def homography(matrix: Union[List, np.array], n: int, src_range_x: Tuple[float, float] = (-5, 5),
-               src_range_y: Tuple[float, float] = (-5, 5), src_range_z: Tuple[float, float] = (-5, 5),
-               outliers_perc: float = 0.0, noise_perc: float = 0.0, homogeneous: bool = True, shuffle: bool = True):
+def homography(
+    matrix: Union[List, np.array],
+    n: int,
+    src_range_x: Tuple[float, float] = (-5, 5),
+    src_range_y: Tuple[float, float] = (-5, 5),
+    src_range_z: Tuple[float, float] = (-5, 5),
+    outliers_perc: float = 0.0,
+    noise_perc: float = 0.0,
+    homogeneous: bool = True,
+    separate: bool = True,
+):
     """
     generates points belonging to homography specified as input
     :param matrix: list 3x3 or np.array with shape (3,3)
@@ -457,7 +551,7 @@ def homography(matrix: Union[List, np.array], n: int, src_range_x: Tuple[float, 
     :param outliers_perc:
     :param noise_perc:
     :param homogeneous:
-    :param shuffle:
+    :param separate:
     :return:
     """
 
@@ -465,23 +559,22 @@ def homography(matrix: Union[List, np.array], n: int, src_range_x: Tuple[float, 
     n_points = int(n * (1 - outliers_perc))
     n_outliers = n - n_points
 
-
-    random_point_cloud = np.random.uniform(low=(src_range_x[0], src_range_y[0], src_range_z[0]),
-                                           high=(src_range_x[1], src_range_y[1], src_range_z[1]),
-                                           size=(3, n_points))
+    random_point_cloud = np.random.uniform(
+        low=(src_range_x[0], src_range_y[0], src_range_z[0]),
+        high=(src_range_x[1], src_range_y[1], src_range_z[1]),
+        size=(3, n_points),
+    )
 
     # rotate point cloud
     angles = 0.8 * (0.5 - np.random.rand(1, 3))
-    R = Rotation.from_euler('zyx', angles, degrees=False).as_matrix()[0]
+    R = Rotation.from_euler("zyx", angles, degrees=False).as_matrix()[0]
     t = np.zeros((3, 1))
 
     # generate camera projection
-    x1p_org, x2p_org, K = simCamProj('uncalibrated', random_point_cloud, R, t)
+    x1p_org, x2p_org, K = simCamProj("uncalibrated", random_point_cloud, R, t)
 
 
-def homography_from_pointcloud(X: np.ndarray,
-                               matrix,
-                               rotation_threshold: float = 0.8):
+def homography_from_pointcloud(X: np.ndarray, matrix, rotation_threshold: float = 0.8):
     """
     starting from a 3D point clouds computes a pair of 2D projections explainable by a homography
 
@@ -505,13 +598,13 @@ def homography_from_pointcloud(X: np.ndarray,
         H,    homography matrix, np.ndarray, (3,3)
         Hn,   homography matrix to be applied to normalized data, np.ndarray, (3,3)
     """
-    motion = 'rotation'
-    camproj = 'uncalibrated'
+    motion = "rotation"
+    camproj = "uncalibrated"
     npts = X.shape[-1]
 
     # randomly rotate X
     angles = 0.8 * (0.5 - np.random.rand(1, 3))
-    Rglobal = Rotation.from_euler('zyx', angles, degrees=False)
+    Rglobal = Rotation.from_euler("zyx", angles, degrees=False)
     Rglobal = Rglobal.as_matrix()[0]
     X = np.matmul(Rglobal, X)
 
@@ -548,76 +641,3 @@ def homography_from_pointcloud(X: np.ndarray,
     Fn = np.eye(3)
 
     return x1ph, x2ph, TN1, TN2, Forg, Fn, E, K, R, t, H, Hn
-
-
-
-"""
-def conic(coefs: Union[List, np.ndarray],
-          n: int,
-          noise_perc: float = 0.0,
-          outliers_perc: float = 0.0,
-          homogeneous: bool = False,
-          shuffle: bool = True,
-          x_range: Tuple[float, float] = (-10.0, 10.0),
-          y_range: Tuple[float, float] = (-10.0, 10.0),
-          resolution: Union[int, Tuple[int, int]] = 1000):
-    
-    returns points of a conic given its 6 coefficients
-    :param coefs: list of 6 conic parameters [x^2, xy, y^2, x, y, 1]
-    :param x_range: interval of values of x for which the curve is to be plotted. default is (-10.0, 10.0)
-    :param y_range: interval of values of y for which the curve is to be plotted. default is (-10.0, 10.0)
-    :param resolution: how many values to be sampled in each of the 2 dimensions, default is 1000*1000
-    :return: (x,y,), pair of coordinates of conic
-    
-
-    # setup
-    if type(resolution) == int:
-        nx = ny = resolution
-    elif type(resolution) == Tuple:
-        nx, ny = resolution
-    else:
-        raise Exception("resolution parameter should be a single int or a pair of ints")
-    points = []
-    X = np.linspace(*x_range, nx)
-    Y = np.linspace(*y_range, ny)
-    xv, yv = np.meshgrid(X, Y)
-    a, b, c, d, e, f = coefs
-    outliers_points = []
-    n_points = int(n * outliers_perc)
-    n_outliers = n - n_points
-
-
-    
-    if a == 0 and b == 0 and c == 0:
-        raise Exception("Inputted linear equation")
-    
-
-    coefs_mat = np.array([[a, b / 2, d / 2],
-                          [b / 2, c, e / 2],
-                          [d / 2, e / 2, f]], dtype=float)
-
-
-    for i in range(nx):
-        for j in range(nx):
-            x = xv[i, j]
-            y = yv[i, j]
-            point = np.array((x, y, 1))
-            out = (point.dot(coefs_mat)).dot(point)
-            if -1e-2 < out < 1e-2:
-                if homogeneous:
-                    points.append((x, y, 1))
-                else:
-                    points.append((x, y))
-
-
-    # generate outliers
-    for _ in range(n_outliers):
-        x_range = (center[0] - radius, center[0] + radius) if outliers_bounded else OPTS["outliers"]["x_r"]
-        y_range = (center[1] - radius, center[1] + radius) if outliers_bounded else OPTS["outliers"]["y_r"]
-        outliers_points.append(outliers(x_range=x_range, y_range=y_range, n=n_outliers, homogeneous=homogeneous))
-    outliers_points = np.array(outliers_points)
-
-
-    return x, y
-
-"""

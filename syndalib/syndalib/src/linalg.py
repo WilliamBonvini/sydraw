@@ -1,4 +1,5 @@
-from typing import Tuple, Union
+from typing import Tuple
+
 import numpy as np
 
 
@@ -25,7 +26,7 @@ def conic_monomials(points: np.array) -> np.array:
         x = points[i][0]
         y = points[i][1]
         rows[i, 0] = x**2
-        rows[i, 1] = x*y
+        rows[i, 1] = x * y
         rows[i, 2] = y**2
         rows[i, 3] = x
         rows[i, 4] = y
@@ -49,7 +50,7 @@ def circle_monomials(points: np.array):
         x = points[i][0]
         y = points[i][1]
         row = np.zeros(shape=(4,))
-        row[0] = x ** 2 + y**2
+        row[0] = x**2 + y**2
         row[1] = x
         row[2] = y
         row[3] = 1
@@ -58,8 +59,7 @@ def circle_monomials(points: np.array):
     return rows
 
 
-def dlt_coefs(vandermonde: np.array,
-              weights: np.array = None) -> np.ndarray:
+def dlt_coefs(vandermonde: np.array, weights: np.array = None) -> np.ndarray:
     """
     compute coefficients of a conic through Direct Linear Transformation.
 
@@ -78,13 +78,13 @@ def dlt_coefs(vandermonde: np.array,
     V = np.transpose(VT)
 
     dlt_coefficients = V[:, -1]
-    dlt_coefficients = dlt_coefficients * (1.0 / dlt_coefficients[0])  # want the x^2 and y^2 terms to be close to 1
+    dlt_coefficients = dlt_coefficients * (
+        1.0 / dlt_coefficients[0]
+    )  # want the x^2 and y^2 terms to be close to 1
     return dlt_coefficients
 
 
-def circle_coefs(radius: float,
-                 center: Tuple[float, float],
-                 verbose: bool = True):
+def circle_coefs(radius: float, center: Tuple[float, float], verbose: bool = True):
     """
     given a radius and a center it returns the parameters of the conic
 
@@ -97,9 +97,9 @@ def circle_coefs(radius: float,
     a = 1
     b = 0
     c = 1
-    d = -2*center[0]
-    e = -2*center[1]
-    f = center[0]**2 + center[1]**2 - radius**2
+    d = -2 * center[0]
+    e = -2 * center[1]
+    f = center[0] ** 2 + center[1] ** 2 - radius**2
 
     if verbose:
         return np.array([a, b, c, d, e, f], dtype=float)
@@ -135,9 +135,7 @@ def veronese_map(points, n):
         j = n - i
         while j >= 0:
             k = n - i - j
-            cols.append(points[:, 0]**i * points[:, 1]**j * points[:, 2]**k)
+            cols.append(points[:, 0] ** i * points[:, 1] ** j * points[:, 2] ** k)
             j -= 1
         i -= 1
     return np.transpose(np.array(cols))
-
-
