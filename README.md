@@ -4,14 +4,15 @@
 [![PyPI Version](https://img.shields.io/pypi/v/sydraw.svg)](https://pypi.org/project/sydraw)
 [![PyPI Downloads](https://img.shields.io/pypi/dm/sydraw.svg?color=orange)](https://pypistats.org/packages/sydraw)
 
-sydraw (Synthetic Data Library) is a python library that helps you create synthetic 2D point clouds for single/multi-model single/multi-class tasks.  
-You'll be able to fix a set of hyperparameters for each class of models you are interested in generating.  
-Models are saved in a .mat file format.  
-Have a look at some samples:
+<figure style="text-align:center">
+    <img src ="https://github.com/WilliamBonvini/sydraw/raw/master/docs/media/imgs/sydraw.jpeg" style="zoom:15%"">
+</figure>
+Sydraw is a python library that helps you create synthetic 2D point clouds for single/multi-model single/multi-class tasks.  
+It gives you the possibility to fix a set of hyper-parameters (i.e. outliers percentage, noise) for the parametric models you want to generate.  
 
-|              Single Class - Single Model               |  Single Class -  Multi Model                        |  Multi Class - Multi Model                        |   
-|:------------------------------------------------------:|:---------------------------------------------------:|:-------------------------------------------------:|
-| <img src="docs/media/imgs/scsm1.png" style="zoom:50%"> |  <img src="docs/media/imgs/scmm1.png" style="zoom:50%">  |  <img src="docs/media/imgs/mcmm1.png" style="zoom:50%">|
+|                                        Single Class - Single Model                                         |                                        Single Class -  Multi Model                                         |                                         Multi Class - Multi Model                                          |   
+|:----------------------------------------------------------------------------------------------------------:|:----------------------------------------------------------------------------------------------------------:|:----------------------------------------------------------------------------------------------------------:|
+| <img src="https://github.com/WilliamBonvini/sydraw/raw/master/docs/media/imgs/scsm1.png" style="zoom:50%"> | <img src="https://github.com/WilliamBonvini/sydraw/raw/master/docs/media/imgs/scmm1.png" style="zoom:50%"> | <img src="https://github.com/WilliamBonvini/sydraw/raw/master/docs/media/imgs/mcmm1.png" style="zoom:50%"> |
                         
 
 ## Setup
@@ -52,7 +53,7 @@ the generation process is straight-forward and it is shown in the following code
 
 ```python
 # import the 2D point cloud module 
-from sydraw import syn2d
+from sydraw import synth
 
 # optionally you can specify the sampling space of both outliers and each class by defining a dictionary (options)
 # and feeding it into the set_options() function.
@@ -82,13 +83,13 @@ options = {
     },
 }
 
-syn2d.set_options(options)
+synth.set_options(options)
 
 
 # models generation
 outliers_range = [0.1,0.2,0.3,0.4,0.5]
 noise_range = [0.01]
-syn2d.generate_data(ns=1024,
+synth.generate_data(ns=1024,
                     npps=256,
                     class_type="circles",
                     nm=2,
