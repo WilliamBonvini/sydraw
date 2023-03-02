@@ -1,18 +1,18 @@
 [tool.poetry]
 
-name = "syndalib"
+name = "sydraw"
 version = "0.0"
 description = "A python library that helps you create synthetic 2D point clouds dataset"
 
-packages = [{ include = "syndalib" }]
+packages = [{ include = "sydraw" }]
 
 license = "MIT"
 authors = ["William Bonvini <william.bonvini@outlook.com>"]
 
 readme = "README.md"
-homepage = "https://pypi.org/project/syndalib"
-documentation = "https://syndalib.readthedocs.io"
-repository = "https://github.com/WilliamBonvini/syndalib"
+homepage = "https://pypi.org/project/sydraw"
+documentation = "https://sydraw.readthedocs.io"
+repository = "https://github.com/WilliamBonvini/sydraw"
 
 keywords = [
 ]
@@ -71,7 +71,7 @@ ipython = "8.10.0"
 
 [tool.poetry.scripts]
 
-syndalib = "syndalib.src.cli:main"
+sydraw = "sydraw.src.cli:main"
 
 [tool.black]
 

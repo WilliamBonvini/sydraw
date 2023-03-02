@@ -31,7 +31,7 @@ def getRanges(nSamplesPerOR: int):
     return [xr, yr, rr]
 
 
-def checkExistenceAndCreate(path: string):
+def checkExistenceAndCreate(path: str):
     """
 
     :param path: takes full path of mat file, included the name of the file

@@ -4,24 +4,8 @@ from typing import List, Tuple, Union
 
 import numpy as np
 from scipy.spatial.transform.rotation import Rotation
-
-from syndalib.syndalib.src.utils.cameraops import normalize, simCamProj, simCamTransform
-from syndalib.syndalib.src.utils.config import OPTS
-
-"""
-synth.circle
-synth.circles
-synth.ellipses
-synth.ellipsis
-synth.conic
-synth.conics
-synth.hyperbola
-synth.hyperbolas
-synth.parabola
-synth.parabolas
-synth.homography
-synth.homographies
-"""
+from sydraw.utils.cameraops import normalize, simCamProj, simCamTransform
+from sydraw.utils.config import OPTS
 
 
 def outliers(

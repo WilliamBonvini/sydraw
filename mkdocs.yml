@@ -2,8 +2,8 @@ site_name: pinchsearcher
 site_description: A social media content searcher that filters content when you pinch in/out from a topic modeling graph
 site_author: William Bonvini
 
-repo_url: https://github.com/WilliamBonvini/syndalib
-edit_uri: https://github.com/WilliamBonvini/syndalib/edit/master/docs
+repo_url: https://github.com/WilliamBonvini/sydraw
+edit_uri: https://github.com/WilliamBonvini/sydraw/edit/master/docs
 
 theme: readthedocs
 

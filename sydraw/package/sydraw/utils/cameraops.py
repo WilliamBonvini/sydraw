@@ -1,7 +1,6 @@
 import pickle
 
 import numpy as np
-import numpy.matlib
 from scipy.spatial.transform import Rotation
 
 

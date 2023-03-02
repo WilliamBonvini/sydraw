@@ -1,9 +1,9 @@
-from typing import Tuple
+from typing import Tuple, Union
 
 import numpy as np
 
 
-def conic_monomials(points: np.array) -> np.array:
+def conic_monomials(points: np.ndarray) -> np.ndarray:
     """
 
     For each row (a point in homogeneous coordinates) in input array, compute the conic monomials.
@@ -16,8 +16,8 @@ def conic_monomials(points: np.array) -> np.array:
     [[x1^2, x1y1, y1^2, x1, x2, 1],
       x2^2, x2y2, y2^2, x2, x1, 1]]
 
-    :param points: np.array, (num_points, 3).
-    :return: np.array, (num_points, 6)
+    :param points: np.ndarray, (num_points, 3).
+    :return: np.ndarray, (num_points, 6)
     """
     n_points = points.shape[0]
     rows = np.zeros(shape=(n_points, 6))
@@ -35,14 +35,14 @@ def conic_monomials(points: np.array) -> np.array:
     return rows
 
 
-def circle_monomials(points: np.array):
+def circle_monomials(points: np.ndarray):
     """
     given a set of points returns a matrix whose rows are the conic extensions for each point
     specifically, the terms are:
     x^2 + y^2; x; y; 1
 
-    :param points: np.array, (num_points,). points are represented in homogeneous coordinates (x,y,z=1)
-    :return: np.array, (num_points, 4)
+    :param points: np.ndarray, (num_points,). points are represented in homogeneous coordinates (x,y,z=1)
+    :return: np.ndarray, (num_points, 4)
     """
     n_points = points.shape[0]
     rows = np.zeros(shape=(n_points, 4))
@@ -59,13 +59,15 @@ def circle_monomials(points: np.array):
     return rows
 
 
-def dlt_coefs(vandermonde: np.array, weights: np.array = None) -> np.ndarray:
+def dlt_coefs(
+    vandermonde: np.ndarray, weights: Union[np.ndarray, None] = None
+) -> np.ndarray:
     """
     compute coefficients of a conic through Direct Linear Transformation.
 
 
-    :param vandermonde: (number of points, number of monomials),np.array or tf.tensor. each row contains monomials (e.g. for a conic: x^2 xy y^2 x y 1) of the corresponding point
-    :param weights: (number of points,) np.array or tf.tensor. probability of belonging to the model for each row in the vandermonde matrix.
+    :param vandermonde: (number of points, number of monomials),np.ndarray or tf.tensor. each row contains monomials (e.g. for a conic: x^2 xy y^2 x y 1) of the corresponding point
+    :param weights: (number of points,) np.ndarray or tf.tensor. probability of belonging to the model for each row in the vandermonde matrix.
                     if all points belong to the model don't specify its value.
     :return: np.ndarray, (number of monomials,), the coefficients computed via dlt
     """
@@ -92,7 +94,7 @@ def circle_coefs(radius: float, center: Tuple[float, float], verbose: bool = Tru
     :param center: center (x,y) of the circle
     :param verbose: True: returns 6 coefficients, corresponding to the terms (x^2; xy; x^2; x; y; 1)
                     False: returns 4 coefficients, corresponding to the terms (x^2+y^2; x; y; 1)
-    :return: np.array, (num coefs,)
+    :return: np.ndarray, (num coefs,)
     """
     a = 1
     b = 0
@@ -125,9 +127,9 @@ def veronese_map(points, n):
      i=0; j=0; k=2
 
 
-    :param points: np.array, (num_points,)
+    :param points: np.ndarray, (num_points,)
     :param n: degree of veronese map
-    :return: np.array with veronese map, (num_points, veronese_columns)
+    :return: np.ndarray with veronese map, (num_points, veronese_columns)
     """
     cols = []
     i = n

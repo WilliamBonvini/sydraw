@@ -1,5 +1,5 @@
-PROJECT := syndalib
-PACKAGE := syndalib
+PROJECT := sydraw
+PACKAGE := sydraw
 MODULES := $(wildcard $(PACKAGE)/*.py)
 
 # MAIN TASKS ##################################################################
@@ -59,8 +59,8 @@ endif
 
 .PHONY: format
 format: install
-	poetry run isort $(PACKAGE) tests notebooks
-	poetry run black $(PACKAGE) tests notebooks
+	poetry run isort $(PACKAGE) $(PACKAGE)/package/tests notebooks
+	poetry run black $(PACKAGE) $(PACKAGE)/package/tests notebooks
 	@ echo
 
 .PHONY: check
@@ -68,9 +68,9 @@ check: install format  ## Run formaters, linters, and static analysis
 ifdef CI
 	git diff --exit-code
 endif
-	poetry run mypy $(PACKAGE) tests
-	poetry run pylint $(PACKAGE) tests --rcfile=.pylint.ini
-	poetry run pydocstyle $(PACKAGE) tests
+	poetry run mypy $(PACKAGE)
+	poetry run pylint $(PACKAGE) --rcfile=.pylint.ini
+	poetry run pydocstyle $(PACKAGE)
 
 # TESTS #######################################################################
 
@@ -109,9 +109,9 @@ endif
 
 .PHONY: test-all
 test-all: install
-	@ if test -e $(FAILURES); then poetry run pytest $(PACKAGE) tests $(PYTEST_RERUN_OPTIONS); fi
+	@ if test -e $(FAILURES); then poetry run pytest $(PACKAGE) $(PACKAGE)/package/tests $(PYTEST_RERUN_OPTIONS); fi
 	@ rm -rf $(FAILURES)
-	poetry run pytest $(PACKAGE) tests $(PYTEST_OPTIONS)
+	poetry run pytest $(PACKAGE) $(PACKAGE)/package/tests $(PYTEST_OPTIONS)
 ifndef DISABLE_COVERAGE
 	poetry run coveragespace update overall
 endif
@@ -191,7 +191,7 @@ clean-all: clean
 
 .PHONY: .clean-install
 .clean-install:
-	find $(PACKAGE) tests -name '__pycache__' -delete
+	find $(PACKAGE) $(PACKAGE)/package/tests -name '__pycache__' -delete
 	rm -rf *.egg-info
 
 .PHONY: .clean-test

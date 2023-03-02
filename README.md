@@ -1,10 +1,10 @@
-# syndalib
+# sydraw
 
-[![PyPI License](https://img.shields.io/pypi/l/syndalib.svg)](https://pypi.org/project/syndalib)
-[![PyPI Version](https://img.shields.io/pypi/v/syndalib.svg)](https://pypi.org/project/syndalib)
-[![PyPI Downloads](https://img.shields.io/pypi/dm/syndalib.svg?color=orange)](https://pypistats.org/packages/syndalib)
+[![PyPI License](https://img.shields.io/pypi/l/sydraw.svg)](https://pypi.org/project/sydraw)
+[![PyPI Version](https://img.shields.io/pypi/v/sydraw.svg)](https://pypi.org/project/sydraw)
+[![PyPI Downloads](https://img.shields.io/pypi/dm/sydraw.svg?color=orange)](https://pypistats.org/packages/sydraw)
 
-Syndalib (Synthetic Data Library) is a python library that helps you create synthetic 2D point clouds for single/multi-model single/multi-class tasks.  
+sydraw (Synthetic Data Library) is a python library that helps you create synthetic 2D point clouds for single/multi-model single/multi-class tasks.  
 You'll be able to fix a set of hyperparameters for each class of models you are interested in generating.  
 Models are saved in a .mat file format.  
 Have a look at some samples:
@@ -25,13 +25,13 @@ Have a look at some samples:
 Install it directly into an activated virtual environment:
 
 ```text
-$ pip install syndalib
+$ pip install sydraw
 ```
 
 or add it to your [Poetry](https://poetry.eustace.io/) project:
 
 ```text
-$ poetry add syndalib
+$ poetry add sydraw
 ```
 
 ## Usage
@@ -40,8 +40,8 @@ After installation, the package can be imported:
 
 ```text
 $ python
->>> import syndalib
->>> syndalib.__version__
+>>> import sydraw
+>>> sydraw.__version__
 ```
 
 # Datasets Generation
@@ -52,7 +52,7 @@ the generation process is straight-forward and it is shown in the following code
 
 ```python
 # import the 2D point cloud module 
-from syndalib import syn2d
+from sydraw import syn2d
 
 # optionally you can specify the sampling space of both outliers and each class by defining a dictionary (options)
 # and feeding it into the set_options() function.
@@ -202,7 +202,7 @@ If you are not interested in generating huge datasets of data corrupted by outli
 I'll show you an example using a circle, but there are analogous functions for the other conics
 
 ```python
-from syndalib import drawer
+from sydraw import drawer
 ```
 ##### points generation
 generates 10 randomly sampled points from a user-specified circle.
@@ -231,4 +231,4 @@ circle = drawer.circle_coefs(r=3.0, c=(1.0, 1.0), n=10)
 ```
 The code above will return a numpy array whose elements are the coefficients of the corresponding conic.
 
-[▲ back to top](#syndalib)
+[▲ back to top](#sydraw)

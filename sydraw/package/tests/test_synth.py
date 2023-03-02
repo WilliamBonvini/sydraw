@@ -2,7 +2,7 @@ from unittest import TestCase
 
 import numpy as np
 
-from syndalib.syndalib.src import synth
+from sydraw import synth
 
 
 class Test(TestCase):
@@ -71,7 +71,7 @@ class Test(TestCase):
         elif foo.__name__ == "ellipse":
             return self.ellipse_args
         elif foo.__name__ == "outliers":
-            return self.outliers_args,
+            return (self.outliers_args,)
         elif foo.__name__ == "parabola":
             return self.parabola_args
         elif foo.__name__ == "line":
@@ -128,7 +128,9 @@ class Test(TestCase):
         # Separate output scenario
 
         if not _are_shapes_pair_output_valid(
-            foo, **self._retrieve_positional_args(foo), **self.args_with_outliers_and_separate_true
+            foo,
+            **self._retrieve_positional_args(foo),
+            **self.args_with_outliers_and_separate_true,
         ):
             print(
                 "Shape inconsistency in function {}, scenario: {}".format(
@@ -146,7 +148,7 @@ class Test(TestCase):
     def test_output_shapes(self):
         for foo in self.synth_foos:
             try:
-                print(f"\nTesting output shapes for function \"{foo.__name__}\"")
+                print(f'\nTesting output shapes for function "{foo.__name__}"')
                 if not self._output_shapes_are_correct(foo):
                     self.fail()
             except:
