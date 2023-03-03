@@ -46,3 +46,9 @@ $ python
 >>> import sydraw
 >>> sydraw.__version__
 ```
+
+Currently supported parametric models:
+* circle
+* ellipse
+* line
+* hyperbola

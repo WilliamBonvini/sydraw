@@ -1,5 +1,5 @@
-site_name: pinchsearcher
-site_description: A social media content searcher that filters content when you pinch in/out from a topic modeling graph
+site_name: sydraw
+site_description: Sydraw is a python library that helps you create synthetic 2D point clouds of parametric models, possibly corrupted by noise and outliers
 site_author: William Bonvini
 
 repo_url: https://github.com/WilliamBonvini/sydraw
