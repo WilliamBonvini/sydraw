@@ -7,11 +7,6 @@ edit_uri: https://github.com/WilliamBonvini/sydraw/edit/master/docs
 
 theme: readthedocs
 
-# Set the version of Python
-build:
-  tools:
-    python: "3.9"
-
 markdown_extensions:
   - codehilite
 
