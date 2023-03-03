@@ -12,8 +12,13 @@ markdown_extensions:
 
 nav:
   - Home: index.md
-  - Advanced: advanced.md
+  - Usage:
+    - Terminology: usage/terminology.md
+    - Points Generation: usage/point_generation.md
+    - Parametric Models: usage/parametric_models.md
+    - Output Folder Structure: usage/output_folder_structure.md
   - About:
-    - Release Notes: about/changelog.md
-    - Contributor Guide: about/contributing.md
-    - License: about/license.md
+      - Release Notes: about/changelog.md
+      - Contributor Guide: about/contributing.md
+      - License: about/license.md
+
