@@ -13,7 +13,7 @@ def outliers(
     y_range: Tuple[float, float],
     n: int,
     homogeneous: bool = True,
-):
+) -> np.ndarray:
     """
     generates outliers in a user specified 2D square
 
@@ -23,9 +23,9 @@ def outliers(
     :param homogeneous: bool, if true returns homogeneous coordinates, otherwise euclidean coordinates, default is true
     :return: np array [(x_1,y_1,1),...,(x_np,y_np,1)] if homogeneous, else [(x_1,y_1),...,(x_np,y_np)]
     """
-
+    n_coords = 3 if homogeneous else 2
     if n <= 0:
-        raise ValueError("parameter n should be greater than zero")
+        return np.zeros((n, n_coords))
     elif x_range[0] >= x_range[1]:
         raise ValueError("invalid interval for x_range")
     elif y_range[0] >= y_range[1]:
@@ -50,15 +50,10 @@ def circle(
     noise_perc: float = 0.0,
     outliers_perc: float = 0.0,
     homogeneous: bool = False,
-    separate: bool = False,
     outliers_bounded: bool = True,
 ) -> np.ndarray:
     """
     generates circle points given radius and center.
-    if outliers_perc = 0 it will return a np.array.
-    otherwise:
-     if shuffle=True -> will return a single shuffled array
-     if shuffle=False -> will return a pair of np.arrays (circle points, outliers)
 
     :param radius: radius
     :param center: center (x,y)
@@ -66,50 +61,53 @@ def circle(
     :param noise_perc: gaussian noise standard deviation
     :param outliers_perc: percentage of outliers out of n data points
     :param homogeneous: bool, if True returns homogeneous coordinates, otherwise euclidean coordinates, default is False
-    :param separate: bool, if True shuffles outliers with data, otherwise returns a tuple of np.arrays (inliers, outliers)
     :param outliers_bounded: bool, if True outliers are bounded within the borders of the curve, otherwise they assume
                              values defined in configuration, default is True.
-    :return: np array [(x_1,y_1,1),...,(x_np,y_np,1)] or pair of np.arrays
+    :return: np array [(x_1,y_1,1),...,(x_np,y_np,1)]
     """
 
     # setup
-    points = []
     n_points = int(n * (1 - outliers_perc))
     n_outliers = n - n_points
+    n_coords = 3 if homogeneous else 2
+
+    points = np.ones((n_points, n_coords))
 
     # generate circle's points
-    for _ in range(n_points):
+    for i in range(n_points):
         alpha = 2 * math.pi * random.random()
         x = center[0] + radius * math.cos(alpha) + np.random.normal(0, noise_perc)
         y = center[1] + radius * math.sin(alpha) + np.random.normal(0, noise_perc)
-        if homogeneous:
-            points.append((x, y, 1))
-        else:
-            points.append((x, y))
-    points = np.array(points)
+        points[i, 0] = x
+        points[i, 1] = y
 
     # generate outliers
-    if n_outliers > 0:
-        x_range = (
-            (center[0] - radius, center[0] + radius)
-            if outliers_bounded
-            else OPTS["outliers"]["x_r"]
-        )
-        y_range = (
-            (center[1] - radius, center[1] + radius)
-            if outliers_bounded
-            else OPTS["outliers"]["y_r"]
-        )
-        outliers_points = outliers(
-            x_range=x_range, y_range=y_range, n=n_outliers, homogeneous=homogeneous
-        )
-        # process data for output
-        if separate:
-            points = points, outliers_points
+    x_range = (
+        (center[0] - radius, center[0] + radius)
+        if outliers_bounded
+        else OPTS["outliers"]["x_r"]
+    )
+    y_range = (
+        (center[1] - radius, center[1] + radius)
+        if outliers_bounded
+        else OPTS["outliers"]["y_r"]
+    )
+    outliers_points = outliers(
+        x_range=x_range, y_range=y_range, n=n_outliers, homogeneous=homogeneous
+    )
 
-        else:
-            points = np.concatenate((points, outliers_points))
-            np.random.shuffle(points)
+    # inliers
+    r, c = points.shape
+    inliers = np.ones((r, c + 1))
+    inliers[:, 0:n_coords] = points
+
+    # outliers
+    r, c = outliers_points.shape
+    outliers_ = np.zeros((r, c + 1))
+    outliers_[:, 0:n_coords] = outliers_points
+
+    points = np.concatenate((inliers, outliers_))
+    np.random.shuffle(points)
 
     return points
 
@@ -137,7 +135,7 @@ def circles(
     :return: np.array, shape (ns, n, num coordinates)
     """
 
-    dim = 3 if homogeneous else 2
+    dim = 4 if homogeneous else 3
     samples = np.zeros((ns, n, dim))
 
     for i in range(ns):
@@ -148,7 +146,6 @@ def circles(
             noise_perc=noise_perc,
             outliers_perc=outliers_perc,
             homogeneous=homogeneous,
-            separate=False,
             outliers_bounded=outliers_bounded,
         )
     return samples
