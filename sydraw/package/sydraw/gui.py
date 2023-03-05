@@ -1,35 +1,110 @@
+import pandas as pd
 from dash import Dash, dcc, html, Input, Output
 import plotly.express as px
+
+from sydraw import synth
 
 app = Dash(__name__)
 
 
 app.layout = html.Div([
     html.H4('Interactive Scatter Plot'),
-    dcc.Graph(id="scatter-plot"),
-    html.P("Filter by petal width:"),
-    dcc.RangeSlider(
-        id='range-slider',
-        min=0, max=2.5, step=0.1,
-        marks={0: '0', 2.5: '2.5'},
-        value=[0.5, 2]
+    html.Div(style={'width': '25%'}),
+    dcc.Graph(id="scatter-plot", style={'width': '90vh', 'height': '90vh'}),
+
+    # Number of models
+    html.P("Change number of models:"),
+    dcc.Slider(
+        id='nm',
+        min=1, max=5, step=1,
+        marks={0: '0', 1: '1', 2: '2', 3: '3', 4: '4', 5: '5'},
+        value=1
     ),
+
+    # Number of points
+    html.P("Number of points:"),
+    dcc.Slider(
+            id='n',
+            min=100, max=1000, step=100,
+            marks={100: '100',
+                   200: '200',
+                   300: '300',
+                   400: '400',
+                   500: '500',
+                   600: '600',
+                   700: '700',
+                   800: '800',
+                   900: '900',
+                   1000: '1000'},
+            value=500
+        ),
+
+    # Noise
+    html.P("Noise Percentage:"),
+    dcc.Slider(
+            id='noise_perc',
+            min=0, max=1, step=0.05,
+            marks={0: '0.0',
+                   0.1: '0.1',
+                   0.2: '0.2',
+                   0.3: '0.3',
+                   0.4: '0.4',
+                   0.5: '0.5',
+                   0.6: '0.6',
+                   0.7: '0.7',
+                   0.8: '0.8',
+                   0.9: '0.9',
+                   1: '1.0'},
+            value=0
+        ),
+
+    # Outliers
+    html.P("Outliers Percentage:"),
+    dcc.Slider(
+            id='outliers_perc',
+            min=0, max=1, step=0.10,
+            marks={0: '0.0',
+                   0.1: '0.1',
+                   0.2: '0.2',
+                   0.3: '0.3',
+                   0.4: '0.4',
+                   0.5: '0.5',
+                   0.6: '0.6',
+                   0.7: '0.7',
+                   0.8: '0.8',
+                   0.9: '0.9',
+                   1: '1.0'},
+            value=0
+        )
 ])
 
 
 @app.callback(
     Output("scatter-plot", "figure"),
-    Input("range-slider", "value"))
-def update_bar_chart(slider_range):
-    df = px.data.iris()  # replace with your own data source
-    low, high = slider_range
-    mask = (df['petal_width'] > low) & (df['petal_width'] < high)
+    Input("nm", "value"),
+    Input("n", "value"),
+    Input("noise_perc", "value"),
+    Input("outliers_perc", "value"))
+def update_bar_chart(nm, n, noise_perc, outliers_perc):
+    sample = synth.circles_sample(
+        nm=nm,
+        n=n,
+        noise_perc=noise_perc,
+        outliers_perc=outliers_perc,
+        radius=0.6,
+        homogeneous=False
+    )
+    df = pd.DataFrame(sample, columns=["x", "y", "label"])
     fig = px.scatter(
-        df[mask], x="sepal_width", y="sepal_length",
-        color="species", size='petal_length',
-        hover_data=['petal_width'])
+        df,
+        x="x",
+        y="y",
+        color="label",
+        range_x=(-2.5, 2.5),
+        range_y=(-2.5, 2.5))
     return fig
 
 
-app.run_server(debug=True)
+if __name__ == "__main__":
+    app.run_server(debug=True)
 

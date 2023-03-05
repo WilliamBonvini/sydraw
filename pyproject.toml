@@ -69,6 +69,7 @@ sniffer = "*"
 MacFSEvents = { version = "*", platform = "darwin" }
 pync = { version = "*", platform = "darwin" }
 ipython = "8.10.0"
+pandas = "^1.4"
 
 # Graphical Tools
 plotly = "^5.13"
