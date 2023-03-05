@@ -70,6 +70,11 @@ MacFSEvents = { version = "*", platform = "darwin" }
 pync = { version = "*", platform = "darwin" }
 ipython = "8.10.0"
 
+# Graphical Tools
+plotly = "^5.13"
+dash = "^2.8"
+
+
 [tool.poetry.scripts]
 
 sydraw = "sydraw.src.cli:main"

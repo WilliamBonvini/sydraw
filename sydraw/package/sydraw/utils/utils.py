@@ -2,23 +2,23 @@ import os
 import random as rand
 import string
 from math import floor
-from typing import List, Tuple
+from typing import List, Tuple, Callable
 
 import matplotlib.pyplot as plt
 import numpy as np
 
 
-def getRanges(nSamplesPerOR: int):
+def get_ranges(n_samples_per_or: int):
     """
 
-    :param nSamplesPerOR:
+    :param n_samples_per_or:
     :return:
     """
     xr = 1
     yr = 1
     rr = 1
     turn = 0
-    while xr * yr * rr < nSamplesPerOR:
+    while xr * yr * rr < n_samples_per_or:
         if turn == 0:
             xr *= 2
         elif turn == 1:
@@ -31,7 +31,7 @@ def getRanges(nSamplesPerOR: int):
     return [xr, yr, rr]
 
 
-def checkExistenceAndCreate(path: str):
+def check_existence_and_create(path: str):
     """
 
     :param path: takes full path of mat file, included the name of the file
@@ -127,7 +127,7 @@ def convert_to_mat_struct(sample: np.ndarray) -> Tuple:
     return circle_mat
 
 
-def compute_num_inliers_per_model(tot_num_inliers, num_of_models):
+def compute_num_inliers_per_model(tot_num_inliers: int, num_of_models: int) -> List[int]:
     """
 
     :param tot_num_inliers: total number of inliers in the whole sample

@@ -6,6 +6,7 @@ import numpy as np
 from scipy.spatial.transform.rotation import Rotation
 from sydraw.utils.cameraops import normalize, simCamProj, simCamTransform
 from sydraw.utils.config import OPTS
+from sydraw.utils.utils import compute_num_inliers_per_model
 
 
 def outliers(
@@ -43,14 +44,15 @@ def outliers(
     return np.array(outliers_points, dtype=float)
 
 
+# ---------------------------------- CIRCLES -----------------------------------
+
+
 def circle(
     radius: float,
     center: Tuple[float, float],
     n: int,
     noise_perc: float = 0.0,
-    outliers_perc: float = 0.0,
     homogeneous: bool = False,
-    outliers_bounded: bool = True,
 ) -> np.ndarray:
     """
     generates circle points given radius and center.
@@ -59,36 +61,193 @@ def circle(
     :param center: center (x,y)
     :param n: number of points
     :param noise_perc: gaussian noise standard deviation
-    :param outliers_perc: percentage of outliers out of n data points
     :param homogeneous: bool, if True returns homogeneous coordinates, otherwise euclidean coordinates, default is False
-    :param outliers_bounded: bool, if True outliers are bounded within the borders of the curve, otherwise they assume
-                             values defined in configuration, default is True.
     :return: np array [(x_1,y_1,1),...,(x_np,y_np,1)]
     """
 
     # setup
-    n_points = int(n * (1 - outliers_perc))
-    n_outliers = n - n_points
     n_coords = 3 if homogeneous else 2
 
-    points = np.ones((n_points, n_coords))
+    points = np.ones((n, n_coords))
 
     # generate circle's points
-    for i in range(n_points):
+    for i in range(n):
         alpha = 2 * math.pi * random.random()
         x = center[0] + radius * math.cos(alpha) + np.random.normal(0, noise_perc)
         y = center[1] + radius * math.sin(alpha) + np.random.normal(0, noise_perc)
         points[i, 0] = x
         points[i, 1] = y
 
+    return points
+
+
+def circles_sample(
+        nm: int,
+        n: int,
+        noise_perc: float = 0.0,
+        outliers_perc: float = 0.0,
+        homogeneous: bool = False,
+        radius: Union[float, Tuple[float, float]] = None
+) -> np.ndarray:
+    """
+
+    :param nm: number of models
+    :param n: number of points in circle
+    :param noise_perc:
+    :param outliers_perc:
+    :param homogeneous:
+    :param radius
+    :return:
+    """
+
+    # setup
+    n_points = int(n * (1 - outliers_perc))
+    n_outliers = n - n_points
+    n_coords = 3 if homogeneous else 2
+    num_inl_per_model = compute_num_inliers_per_model(tot_num_inliers=n_points, num_of_models=nm)
+    opt_circle = OPTS["circles"]
+    if radius is None:
+        min_r, max_r = opt_circle["radius_r"]
+    elif type(radius) == float:
+        min_r, max_r = radius, radius
+    # TODO: FIX dimensionality check
+    else:  
+        min_r, max_r = radius
+
+    min_x_center, max_x_center = opt_circle["x_center_r"]
+    min_center_y, max_center_y = opt_circle["y_center_r"]
+
+    points = np.ones((n_points, n_coords + 1))
+    i_tot = 0
+    for i_model, npic in zip(range(nm), num_inl_per_model):
+        # npic: number of points in circle
+        radius = random.uniform(min_r, max_r)
+        x_center = random.uniform(min_x_center, max_x_center)
+        y_center = random.uniform(min_center_y, max_center_y)
+        center = x_center, y_center
+
+        c = circle(
+            radius=radius,
+            center=center,
+            n=npic,
+            noise_perc=noise_perc,
+            homogeneous=homogeneous
+        )
+
+        points[i_tot: i_tot + npic, 0:n_coords] = c
+        points[i_tot: i_tot + npic, -1] = i_model + 1
+        i_tot += npic
+
+    # generate outliers
+    x_range = OPTS["outliers"]["x_r"]
+    y_range = OPTS["outliers"]["y_r"]
+    outliers_points = outliers(
+        x_range=x_range, y_range=y_range, n=n_outliers, homogeneous=homogeneous
+    )
+    outlier_points_labelled = np.zeros((n_outliers, n_coords+1))
+    outlier_points_labelled[:, 0:n_coords] = outliers_points
+
+    points = np.concatenate((points, outlier_points_labelled))
+    np.random.shuffle(points)
+    return points
+
+
+def circles_dataset(
+    nm: int,
+    ns: int,
+    n: int,
+    noise_perc: float = 0.0,
+    outliers_perc: float = 0.0,
+    homogeneous: bool = False,
+    radius: Union[float, Tuple[float, float], None] = None
+) -> np.array:
+    """
+
+    :param nm: number of models in each sample
+    :param ns: number of samples
+    :param n: number of points
+    :param noise_perc: gaussian noise standard deviation
+    :param outliers_perc: percentage of outliers out of n data points
+    :param homogeneous: bool, if True returns homogeneous coordinates, otherwise euclidean coordinates, default is False
+    :param radius:
+    :return: np.array, shape (ns, n, num coordinates)
+    """
+
+    dim = 4 if homogeneous else 3
+    samples = np.zeros((ns, n, dim))
+
+    for i in range(ns):
+
+        samples[i] = circles_sample(
+            nm=nm,
+            n=n,
+            noise_perc=noise_perc,
+            outliers_perc=outliers_perc,
+            homogeneous=homogeneous,
+            radius=radius
+        )
+    return samples
+
+
+# ---------------------------------- ELLIPSIS -----------------------------------
+
+
+def ellipse(
+    semi_x_axis: float,
+    semi_y_axis: float,
+    center: Tuple[float, float],
+    n: int,
+    noise_perc: float = 0.0,
+    outliers_perc: float = 0.0,
+    homogeneous: bool = True,
+    outliers_bounded: bool = True,
+) -> np.ndarray:
+    """
+    samples point from an ellipse.
+    Equation is (x-x_0)^2/a^2 + (y-y_0)^2/b^2=1.
+
+    :param semi_x_axis: length of the semi-axis on the abscissa, commonly colled 'a'
+    :param semi_y_axis: length of the semi-axis on the ordinate, commonly called 'b'
+    :param center: center of the ellipse
+    :param n: number of points to be sampled
+    :param noise_perc: gaussian noise standard deviation, default is 0.0
+    :param outliers_perc:
+    :param homogeneous: bool, if true returns homogeneous coordinates, otherwise euclidean coordinates, default is true
+    :param outliers_bounded: bool,
+    :return: np.array, shape = (n, n_coords)
+    """
+
+    # setup
+    a = semi_x_axis
+    b = semi_y_axis
+    x_0, y_0 = center
+    x_sampling_interval = (x_0 - a, x_0 + a)
+    n_coords = 3 if homogeneous else 2
+    n_points = int(n * (1 - outliers_perc))
+    n_outliers = n - n_points
+    points = np.ones((n_points, n_coords))
+
+    # generate ellipse's points
+    for i in range(n_points):
+        x = random.uniform(*x_sampling_interval)
+        # equation for sampling y: y = sqrt((1-((x-x_0)**2)/a**2)*b**2) + y_0
+        y = math.sqrt((1 - ((x - x_0) ** 2 / a**2)) * b**2)
+        y = (
+            y if random.random() < 0.5 else -y
+        )  # choose positive or negative solution of the square root
+        y = y + y_0 + np.random.normal(0, noise_perc)
+        x = x + np.random.normal(0, noise_perc)
+        points[i, 0] = x
+        points[i, 1] = y
+
     # generate outliers
     x_range = (
-        (center[0] - radius, center[0] + radius)
+        (center[0] - a, center[0] + a)
         if outliers_bounded
         else OPTS["outliers"]["x_r"]
     )
     y_range = (
-        (center[1] - radius, center[1] + radius)
+        (center[1] - b, center[1] + b)
         if outliers_bounded
         else OPTS["outliers"]["y_r"]
     )
@@ -103,8 +262,8 @@ def circle(
 
     # outliers
     r, c = outliers_points.shape
-    outliers_ = np.zeros((r, c + 1))
-    outliers_[:, 0:n_coords] = outliers_points
+    outliers_ = np.zeros((r, c+1))
+    outliers_[:, 0: n_coords] = outliers_points
 
     points = np.concatenate((inliers, outliers_))
     np.random.shuffle(points)
@@ -112,119 +271,49 @@ def circle(
     return points
 
 
-def circles(
-    ns: int,
-    radius: float,
-    center: Tuple[float, float],
-    n: int,
-    noise_perc: float = 0.0,
-    outliers_perc: float = 0.0,
-    homogeneous: bool = False,
-    outliers_bounded: bool = True,
-) -> np.array:
+def ellipsis(
+        ns: int,
+        n: int,
+        noise_perc: float = 0.0,
+        outliers_perc: float = 0.0,
+        homogeneous: bool = True,
+        outliers_bounded: bool = True
+) -> np.ndarray:
     """
+    Return a numpy array of ns ellipsis
 
-    :param radius: radius
-    :param center: center (x,y)
-    :param n: number of points
-    :param noise_perc: gaussian noise standard deviation
-    :param outliers_perc: percentage of outliers out of n data points
-    :param homogeneous: bool, if True returns homogeneous coordinates, otherwise euclidean coordinates, default is False
-    :param outliers_bounded: bool, if True outliers are bounded within the borders of the curve, otherwise they assume
-                             values defined in configuration, default is True.
-    :return: np.array, shape (ns, n, num coordinates)
+    :param ns: total number of samples
+    :param n: number of points to be sampled
+    :param noise_perc: gaussian noise standard deviation, default is 0.0
+    :param outliers_perc:
+    :param homogeneous: bool, if true returns homogeneous coordinates, otherwise euclidean coordinates, default is true
+    :param outliers_bounded: bool,
+    :return: np.array, shape = (ns, n, 3) if homogeneous = False; (ns, n, 4) if homogeneous = True.
     """
-
-    dim = 4 if homogeneous else 3
+    dim = 3 if not homogeneous else 4
     samples = np.zeros((ns, n, dim))
+    opts_ellipse = OPTS["ellipses"]
+    min_radius, max_radius = opts_ellipse["radius_r"]
+    semi_x_axis = random.uniform(min_radius, max_radius)
+    semi_y_axis = random.uniform(min_radius, max_radius)
+    min_x_center, max_x_center = opts_ellipse["x_center_r"]
+    x_center = random.uniform(min_x_center, max_x_center)
+    min_y_center, max_y_center = opts_ellipse["y_center_r"]
+    y_center = random.uniform(min_y_center, max_y_center)
+    center = x_center, y_center
 
     for i in range(ns):
-        samples[i] = circle(
-            radius=radius,
+        samples[i] = ellipse(
+            semi_x_axis=semi_x_axis,
+            semi_y_axis=semi_y_axis,
             center=center,
             n=n,
             noise_perc=noise_perc,
             outliers_perc=outliers_perc,
             homogeneous=homogeneous,
-            outliers_bounded=outliers_bounded,
+            outliers_bounded=outliers_bounded
         )
     return samples
-
-
-def ellipse(
-    semi_x_axis: float,
-    semi_y_axis: float,
-    center: Tuple[float, float],
-    n: int,
-    noise_perc: float = 0.0,
-    outliers_perc: float = 0.0,
-    homogeneous: bool = True,
-    separate: bool = True,
-    outliers_bounded: bool = True,
-) -> np.ndarray:
-    """
-    samples point from an ellipse.
-    Equation is (x-x_0)^2/a^2 + (y-y_0)^2/b^2=1
-    :param semi_x_axis: length of the semi-axis on the abscissa, commonly colled 'a'
-    :param semi_y_axis: length of the semi-axis on the ordinate, commonly called 'b'
-    :param center: center of the ellipse
-    :param n: number of points to be sampled
-    :param noise_perc: gaussian noise standard deviation, default is 0.0
-    :param outliers_perc:
-    :param homogeneous: bool, if true returns homogeneous coordinates, otherwise euclidean coordinates, default is true
-    :param separate: bool,
-    :param outliers_bounded: bool,
-    :return: np.array, shape = (n, n_coords)
-    """
-
-    # setup
-    a = semi_x_axis
-    b = semi_y_axis
-    (x_0, y_0) = center
-    x_sampling_interval = (x_0 - a, x_0 + a)
-    points = []
-    n_points = int(n * (1 - outliers_perc))
-    n_outliers = n - n_points
-
-    # generate ellipse's points
-    for _ in range(n_points):
-        x = random.uniform(*x_sampling_interval)
-        # equation for sampling y: y = sqrt((1-((x-x_0)**2)/a**2)*b**2) + y_0
-        y = math.sqrt((1 - ((x - x_0) ** 2 / a**2)) * b**2)
-        y = (
-            y if random.random() < 0.5 else -y
-        )  # choose positive or negative solution of the square root
-        y = y + y_0 + np.random.normal(0, noise_perc)
-        x = x + np.random.normal(0, noise_perc)
-        if homogeneous:
-            points.append((x, y, 1))
-        else:
-            points.append((x, y))
-    points = np.array(points)
-
-    # generate outliers
-    if n_outliers > 0:
-        x_range = (
-            (center[0] - a, center[0] + a)
-            if outliers_bounded
-            else OPTS["outliers"]["x_r"]
-        )
-        y_range = (
-            (center[1] - b, center[1] + b)
-            if outliers_bounded
-            else OPTS["outliers"]["y_r"]
-        )
-        outliers_points = outliers(
-            x_range=x_range, y_range=y_range, n=n_outliers, homogeneous=homogeneous
-        )
-        # process data for output
-        if not separate:
-            output = np.concatenate((points, outliers_points))
-            np.random.shuffle(output)
-        else:
-            output = points, outliers_points
-        return output
-    return points
 
 
 def hyperbola(
