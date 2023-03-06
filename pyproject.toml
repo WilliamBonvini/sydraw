@@ -1,10 +1,10 @@
 [tool.poetry]
 
 name = "sydraw"
-version = "0.0.1"
+version = "0.0.2"
 description = "A python library that helps you create synthetic 2D point clouds dataset"
 
-packages = [{ include = "sydraw" }]
+packages = [{ include = "sydraw/package/sydraw" }]
 
 license = "MIT"
 authors = ["William Bonvini <william.bonvini@outlook.com>"]
