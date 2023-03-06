@@ -21,7 +21,7 @@ It gives you the possibility to fix a set of hyper-parameters (i.e. outliers per
 
 ### Requirements
 
-* Python 3.8+
+* Python 3.9+
 
 ### Installation
 
