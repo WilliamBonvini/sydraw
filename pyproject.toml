@@ -1,7 +1,7 @@
 [tool.poetry]
 
 name = "sydraw"
-version = "0.0.2"
+version = "0.0.3"
 description = "A python library that helps you create synthetic 2D point clouds dataset"
 
 packages = [{ include = "sydraw/package/sydraw" }]
