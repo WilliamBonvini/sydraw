@@ -54,5 +54,5 @@ Currently supported parametric models:
 * line
 * hyperbola
 
-Checkout the [official documentation](https://sydraw.readthedocs.io/en/latest/) for a comprehnsive overview of the included functionalities.
+Checkout the [official documentation](https://sydraw.readthedocs.io/en/latest/) for a comprehensive overview of the included functionalities.
 
