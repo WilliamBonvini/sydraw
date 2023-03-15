@@ -16,6 +16,7 @@ It gives you the possibility to fix a set of hyper-parameters (i.e. outliers per
 |:----------------------------------------------------------------------------------------------------------:|:----------------------------------------------------------------------------------------------------------:|:----------------------------------------------------------------------------------------------------------:|
 | <img src="https://github.com/WilliamBonvini/sydraw/raw/master/docs/media/imgs/scsm1.png" style="zoom:50%"> | <img src="https://github.com/WilliamBonvini/sydraw/raw/master/docs/media/imgs/scmm1.png" style="zoom:50%"> | <img src="https://github.com/WilliamBonvini/sydraw/raw/master/docs/media/imgs/mcmm1.png" style="zoom:50%"> |
                         
+Try out our [demo](https://sydraw-demo.onrender.com/)!
 
 ## Setup
 
@@ -53,4 +54,5 @@ Currently supported parametric models:
 * line
 * hyperbola
 
-Checkout the official documentation for a comprehensive overview on the the available methods.
+Checkout the [official documentation](https://sydraw.readthedocs.io/en/latest/) for a comprehensive overview of the included functionalities.
+
