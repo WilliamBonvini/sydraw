@@ -32,8 +32,9 @@ Such points belong to the circle with radius = 3 and center = (1.0,1.0).
 circle = synth.circles_dataset(nm=3, ns=400, n=1000, noise_perc=0.02, outliers_perc=0.20)
 ```
 
-The code above will return a numpy array with shape (ns, n, 3).
+The code above will return a numpy array with shape (ns, n, 3).  
 Where the first two dimension are:
+
 - ns: number of samples (a sample is defined as a point cloud)
 - n: number of points in each sample
 
