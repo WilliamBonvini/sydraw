@@ -11,11 +11,11 @@ here I'll show you where the data generated in the previous code snippet will be
                                   |- ns_1024
                                           |- test
                                                 |- imgs
-                                                |- circles_no_10_noise_0.01.mat
-                                                |- circles_no_20_noise_0.01.mat
-                                                |- circles_no_30_noise_0.01.mat
-                                                |- circles_no_40_noise_0.01.mat
-                                                |- circles_no_50_noise_0.01.mat
+                                                |- circles_no_10_noise_0.01.npy
+                                                |- circles_no_20_noise_0.01.npy
+                                                |- circles_no_30_noise_0.01.npy
+                                                |- circles_no_40_noise_0.01.npy
+                                                |- circles_no_50_noise_0.01.npy
                                               
 ```
 where ```imgs``` contains some images of the randomly sampled models. It has the following structure:

@@ -2,13 +2,13 @@
 # Point Generation
 
 ```python
-from sydraw import drawer
+from sydraw import synth
 ```
 ### Example 
 
 generate 10 randomly sampled points from a user-specified circle.
 ```python
-circle = drawer.circle_points(r=3.0, c=(1.0,1.0), n=10)
+circle = synth.circle(radius=3.0, center=(1.0,1.0), n=10, noise_perc=0.02, homogeneous=True)
 ```
 
 The code above will generate a numpy array of 2D points in homogeneous coordinates.   
@@ -29,6 +29,13 @@ Such points belong to the circle with radius = 3 and center = (1.0,1.0).
 
 ##### model coefficients generation
 ```python
-circle = drawer.circle_coefs(r=3.0, c=(1.0, 1.0), n=10)
+circle = synth.circles_dataset(nm=3, ns=400, n=1000, noise_perc=0.02, outliers_perc=0.20)
 ```
-The code above will return a numpy array whose elements are the coefficients of the corresponding conic.
+
+The code above will return a numpy array with shape (ns, n, 3).
+Where the first two dimension are:
+- ns: number of samples (a sample is defined as a point cloud)
+- n: number of points in each sample
+
+while the first two 
+- nm: number of models in each sample

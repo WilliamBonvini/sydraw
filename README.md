@@ -52,3 +52,5 @@ Currently supported parametric models:
 * ellipse
 * line
 * hyperbola
+
+Checkout the official documentation for a comprehensive overview on the the available methods.
