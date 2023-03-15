@@ -33,10 +33,13 @@ circle = synth.circles_dataset(nm=3, ns=400, n=1000, noise_perc=0.02, outliers_p
 ```
 
 The code above will return a numpy array with shape (ns, n, 3).  
-Where the first two dimension are:
+Where the first two axis are:
 
 - ns: number of samples (a sample is defined as a point cloud)
 - n: number of points in each sample
 
-while the first two 
-- nm: number of models in each sample
+while the last axis has dimensionality equal to 3: the first 2 dimensions refer to the x and y coordinate of the data points, while the last dimension contains the class label.  
+class labels are: 
+
+- 0: outlier
+- 1,2, 3... : model class identifier 
