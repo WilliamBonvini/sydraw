@@ -49,6 +49,7 @@ $ python
 ```
 
 Currently supported parametric models:
+
 * circle
 * ellipse
 * line

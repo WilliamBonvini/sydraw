@@ -27,7 +27,7 @@ Such points belong to the circle with radius = 3 and center = (1.0,1.0).
 ```
 
 
-##### model coefficients generation
+##### Dataset Generation
 ```python
 circle = synth.circles_dataset(nm=3, ns=400, n=1000, noise_perc=0.02, outliers_perc=0.20)
 ```
