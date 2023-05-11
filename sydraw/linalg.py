@@ -1,4 +1,4 @@
-from typing import Tuple, Union
+from typing import Optional, Tuple
 
 import numpy as np
 
@@ -60,7 +60,7 @@ def circle_monomials(points: np.ndarray):
 
 
 def dlt_coefs(
-    vandermonde: np.ndarray, weights: Union[np.ndarray, None] = None
+    vandermonde: np.ndarray, weights: Optional[np.ndarray] = None
 ) -> np.ndarray:
     """
     compute coefficients of a conic through Direct Linear Transformation.
@@ -72,9 +72,15 @@ def dlt_coefs(
     :return: np.ndarray, (number of monomials,), the coefficients computed via dlt
     """
 
-    weights = weights + np.random.normal(0, 1e-9)
-    weights = weights / np.linalg.norm(weights)
-    weights = np.diag(weights)
+    if weights is not None:
+
+        weights = weights + np.random.normal(0, 1e-9)
+        weights = weights / np.linalg.norm(weights)
+        weights = np.diag(weights)
+
+    else:
+        weights = np.ones(vandermonde.shape[0])
+
     weighted_vander = np.matmul(weights, vandermonde)
     U, S, VT = np.linalg.svd(weighted_vander)
     V = np.transpose(VT)
@@ -105,8 +111,8 @@ def circle_coefs(radius: float, center: Tuple[float, float], verbose: bool = Tru
 
     if verbose:
         return np.array([a, b, c, d, e, f], dtype=float)
-    else:
-        return np.array([a, d, e, f], dtype=float)
+
+    return np.array([a, d, e, f], dtype=float)
 
 
 def veronese_map(points, n):
