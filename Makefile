@@ -59,8 +59,8 @@ endif
 
 .PHONY: format
 format: install
-	poetry run isort $(PACKAGE) $(PACKAGE)/package/tests notebooks
-	poetry run black $(PACKAGE) $(PACKAGE)/package/tests notebooks
+	poetry run isort $(PACKAGE) notebooks
+	poetry run black $(PACKAGE) notebooks
 	@ echo
 
 .PHONY: check
