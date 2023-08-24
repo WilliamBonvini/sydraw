@@ -9,15 +9,15 @@
 [![PyPI Downloads](https://img.shields.io/pypi/dm/sydraw.svg?color=orange)](https://pypistats.org/packages/sydraw)
 ![](https://img.shields.io/badge/contributions-welcome-green.svg)
 
-Sydraw is a python library that helps you create synthetic 2D point clouds for single/multi-model single/multi-class tasks.  
+[![demo](https://github.com/WilliamBonvini/sydraw/raw/master/docs/media/imgs/demo.png)][1]
+
+Sydraw is a Python library that helps you create synthetic 2D point clouds for single/multi-model single/multi-class tasks.  
 It gives you the possibility to fix a set of hyper-parameters (i.e. outliers percentage, noise) for the parametric models you want to generate.  
 
 |                                        Single Class - Single Model                                         |                                        Single Class -  Multi Model                                         |                                         Multi Class - Multi Model                                          |   
 |:----------------------------------------------------------------------------------------------------------:|:----------------------------------------------------------------------------------------------------------:|:----------------------------------------------------------------------------------------------------------:|
 | <img src="https://github.com/WilliamBonvini/sydraw/raw/master/docs/media/imgs/scsm1.png" style="zoom:50%"> | <img src="https://github.com/WilliamBonvini/sydraw/raw/master/docs/media/imgs/scmm1.png" style="zoom:50%"> | <img src="https://github.com/WilliamBonvini/sydraw/raw/master/docs/media/imgs/mcmm1.png" style="zoom:50%"> |
                         
-Try out our [demo](https://sydraw-demo.onrender.com/)!
-
 ## Setup
 
 ### Requirements
@@ -56,4 +56,8 @@ Currently supported parametric models:
 * hyperbola
 
 Checkout the [official documentation](https://sydraw.readthedocs.io/en/latest/) for a comprehensive overview of the included functionalities.
+
+
+[1]: https://sydraw-demo.onrender.com/
+
 
