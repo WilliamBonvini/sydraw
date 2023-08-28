@@ -1,4 +1,5 @@
-name: master
+
+name: develop
 
 on: [push]
 
@@ -34,11 +35,11 @@ jobs:
     - name: Install dependencies
       run: make install
 
-    # Temporarily ignore steps
-    # - name: Check code
+    # temporarily ignore steps
+    # - name: Check code  
     #   run: make check
 
     # - name: Upload coverage
-    #   uses: codecov/codecov-action@v1
-    #   with:
-    #     fail_ci_if_error: true
+    #  uses: codecov/codecov-action@v1
+    #  with:
+    #    fail_ci_if_error: true
