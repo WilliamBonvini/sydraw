@@ -10,7 +10,7 @@
 ![](https://img.shields.io/badge/contributions-welcome-green.svg)
 
 Sydraw is a Python library that helps you create synthetic 2D point clouds for single/multi-model single/multi-class tasks.  
-It gives you the possibility to fix a set of hyper-parameters (i.e. outliers percentage, noise) for the parametric models you want to generate.  
+It allows you to fix a set of hyper-parameters (i.e. outliers percentage, noise) for the parametric models you want to generate.  
 
 |                                        Single Class - Single Model                                         |                                        Single Class -  Multi Model                                         |                                         Multi Class - Multi Model                                          |   
 |:----------------------------------------------------------------------------------------------------------:|:----------------------------------------------------------------------------------------------------------:|:----------------------------------------------------------------------------------------------------------:|
@@ -55,7 +55,8 @@ Currently supported parametric models:
 * line
 * hyperbola
 
-Checkout the [official documentation](https://sydraw.readthedocs.io/en/latest/) for a comprehensive overview of the included functionalities.
+Check out the [official documentation](https://sydraw.readthedocs.io/en/latest/) for a comprehensive overview of the included functionalities.
+
 
 
 [1]: https://sydraw-demo.onrender.com/
