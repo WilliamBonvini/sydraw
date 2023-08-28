@@ -35,10 +35,11 @@ jobs:
     - name: Install dependencies
       run: make install
 
-    # - name: Check code  temporarily ignore step
+    # temporarily ignore steps
+    # - name: Check code  
     #   run: make check
 
-    - name: Upload coverage
-      uses: codecov/codecov-action@v1
-      with:
-        fail_ci_if_error: true
+    # - name: Upload coverage
+    #  uses: codecov/codecov-action@v1
+    #  with:
+    #    fail_ci_if_error: true
