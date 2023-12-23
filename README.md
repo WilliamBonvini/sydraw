@@ -1,64 +1,97 @@
 # Sydraw
 
-<h1 align="center">
-<img src="https://github.com/WilliamBonvini/sydraw/raw/master/docs/media/imgs/sydraw.jpeg" width="120">
-</h1><br>
+<div align="center">
+  <table>
+    <tr>
+      <td>
+        <img src="https://github.com/WilliamBonvini/sydraw/raw/master/docs/media/imgs/featured.png" width="300" alt="Sydraw Logo">
+      </td>
+      <td>
+        <strong>Sydraw</strong> is a Python library designed to assist in the creation of synthetic 2D point clouds, tailored for both single and multi-model fitting problems across single and multi-class scenarios. It offers the ability to finely tune hyper-parameters such as outlier percentages and noise levels, providing detailed control in the generation of parametric models.
+      </td>
+    </tr>
+  </table>
+</div>
 
-[![PyPI License](https://img.shields.io/pypi/l/sydraw.svg)](https://pypi.org/project/sydraw)
-[![PyPI Version](https://img.shields.io/pypi/v/sydraw.svg)](https://pypi.org/project/sydraw)
-[![PyPI Downloads](https://img.shields.io/pypi/dm/sydraw.svg?color=orange)](https://pypistats.org/packages/sydraw)
-![](https://img.shields.io/badge/contributions-welcome-green.svg)
+<div align="center">
+  <a href="https://pypi.org/project/sydraw">
+    <img src="https://img.shields.io/pypi/l/sydraw.svg" alt="PyPI License">
+  </a>
+  <a href="https://pypi.org/project/sydraw">
+    <img src="https://img.shields.io/pypi/v/sydraw.svg" alt="PyPI Version">
+  </a>
+  <a href="https://pypistats.org/packages/sydraw">
+    <img src="https://img.shields.io/pypi/dm/sydraw.svg?color=orange" alt="PyPI Downloads">
+  </a>
+  <img src="https://img.shields.io/badge/contributions-welcome-green.svg" alt="Contributions Welcome">
+</div>
 
-Sydraw is a Python library that helps you create synthetic 2D point clouds for single/multi-model single/multi-class tasks.  
-It allows you to fix a set of hyper-parameters (i.e. outliers percentage, noise) for the parametric models you want to generate.  
+---
 
-|                                        Single Class - Single Model                                         |                                        Single Class -  Multi Model                                         |                                         Multi Class - Multi Model                                          |   
-|:----------------------------------------------------------------------------------------------------------:|:----------------------------------------------------------------------------------------------------------:|:----------------------------------------------------------------------------------------------------------:|
-| <img src="https://github.com/WilliamBonvini/sydraw/raw/master/docs/media/imgs/scsm1.png" style="zoom:50%"> | <img src="https://github.com/WilliamBonvini/sydraw/raw/master/docs/media/imgs/scmm1.png" style="zoom:50%"> | <img src="https://github.com/WilliamBonvini/sydraw/raw/master/docs/media/imgs/mcmm1.png" style="zoom:50%"> |
-                        
-[<img src="https://github.com/WilliamBonvini/sydraw/raw/master/docs/media/imgs/demo.png" width="100" height="100">][1]
+### Examples of Generated Models
+
+<div align="center">
+  <table>
+    <tr>
+      <td>Single Class - Single Model</td>
+      <td>Single Class - Multi Model</td>
+      <td>Multi Class - Multi Model</td>
+      <td rowspan="2">
+        <a href="https://sydraw-demo.onrender.com/">
+          <img src="https://github.com/WilliamBonvini/sydraw/raw/master/docs/media/imgs/demo.png" width="50" alt="Demo">
+        </a>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <img src="https://github.com/WilliamBonvini/sydraw/raw/master/docs/media/imgs/scsm1.png" alt="Single Class Single Model" width="200">
+      </td>
+      <td>
+        <img src="https://github.com/WilliamBonvini/sydraw/raw/master/docs/media/imgs/scmm1.png" alt="Single Class Multi Model" width="200">
+      </td>
+      <td>
+        <img src="https://github.com/WilliamBonvini/sydraw/raw/master/docs/media/imgs/mcmm1.png" alt="Multi Class Multi Model" width="200">
+      </td>
+    </tr>
+  </table>
+</div>
+
+---
 
 ## Setup
 
 ### Requirements
 
-* Python 3.9+
+- Python 3.9 or later
 
 ### Installation
 
-Install it directly into an activated virtual environment:
-
-```text
-$ pip install sydraw
+Option 1: Install directly into an activated virtual environment:
+```
+pip install sydraw
 ```
 
-or add it to your [Poetry](https://poetry.eustace.io/) project:
-
-```text
-$ poetry add sydraw
+Option 2: Add to your Poetry project:
+```
+poetry add sydraw
 ```
 
 ## Usage
 
-After installation, the package can be imported:
-
-```text
-$ python
->>> import sydraw
->>> sydraw.__version__
+Once installed, you can import and start using sydraw:
+```
+python
+>> import sydraw
+>> print(sydraw.__version__)
 ```
 
-Currently supported parametric models:
+### Supported Parametric Models
 
-* circle
-* ellipse
-* line
-* hyperbola
+- Circle
+- Ellipse
+- Line
+- Hyperbola
 
-Check out the [official documentation](https://sydraw.readthedocs.io/en/latest/) for a comprehensive overview of the included functionalities.
+For a detailed guide and additional functionalities, visit the [official documentation](https://sydraw.readthedocs.io/en/latest/).
 
-
-
-[1]: https://sydraw-demo.onrender.com/
-
-
+---
