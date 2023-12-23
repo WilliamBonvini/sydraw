@@ -4,7 +4,7 @@
   <table>
     <tr>
       <td>
-        <img src="https://github.com/WilliamBonvini/sydraw/raw/master/docs/media/imgs/featured.png" width="300" alt="Sydraw Logo">
+        <img src="https://github.com/WilliamBonvini/sydraw/raw/master/docs/media/imgs/featured.png" width="500" alt="Sydraw Logo">
       </td>
       <td>
         <strong>Sydraw</strong> is a Python library designed to assist in the creation of synthetic 2D point clouds, tailored for both single and multi-model fitting problems across single and multi-class scenarios. It offers the ability to finely tune hyper-parameters such as outlier percentages and noise levels, providing detailed control in the generation of parametric models.

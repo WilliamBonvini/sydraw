@@ -1,20 +1,24 @@
-
 # Point Generation
+
+Import the necessary module from the `sydraw` package:
 
 ```python
 from sydraw import synth
 ```
-### Example 
+## Model: Circles
 
-generate 10 randomly sampled points from a user-specified circle.
+### Example: Generating Points from a Circle
+
+This example demonstrates generating 10 randomly sampled points from a user-specified circle:
+
 ```python
 circle = synth.circle(radius=3.0, center=(1.0,1.0), n=10, noise_perc=0.02, homogeneous=True)
 ```
 
-The code above will generate a numpy array of 2D points in homogeneous coordinates.   
-Such points belong to the circle with radius = 3 and center = (1.0,1.0).
+This code generates a NumPy array of 2D points in homogeneous coordinates. The points are sampled from a circle with a radius of `3` and a center at coordinates `(1.0,1.0)`. The resulting array might look like this:
+
 ```
->>> array([[-1.51779408, -0.63116921,  1.        ],
+array([[-1.51779408, -0.63116921,  1.        ],
        [-1.83302435,  1.98690071,  1.        ],
        [-0.0106027 ,  3.82465612,  1.        ],
        [-0.32848561,  3.68981895,  1.        ],
@@ -26,20 +30,22 @@ Such points belong to the circle with radius = 3 and center = (1.0,1.0).
        [ 3.88477601,  1.82344847,  1.        ]])
 ```
 
+### Dataset Generation
 
-##### Dataset Generation
+To generate a (single or multi-model) dataset of circles:
+
 ```python
 circle = synth.circles_dataset(nm=3, ns=400, n=1000, noise_perc=0.02, outliers_perc=0.20)
 ```
 
-The code above will return a numpy array with shape (ns, n, 3).  
-Where the first two axis are:
+The code above returns a NumPy array with the shape `(ns, n, 3)`, where:
+- `ns` is the number of samples (each sample is an array of data points).
+- `n` is the number of points in each sample.
+- The last axis of the array has a dimensionality of 3:  
 
-- ns: number of samples (a sample is defined as a point cloud)
-- n: number of points in each sample
+  - The first two dimensions represent the x and y coordinates of the data points.
+  - The third dimension contains the _class label_.
 
-while the last axis has dimensionality equal to 3: the first 2 dimensions refer to the x and y coordinate of the data points, while the last dimension contains the class label.  
-class labels are: 
-
-- 0: outlier
-- 1,2, 3... : model class identifier 
+**Class labels** are defined as follows:
+- `0`: Outlier.
+- `1`, `2`, `3`, etc.: Model class identifier.

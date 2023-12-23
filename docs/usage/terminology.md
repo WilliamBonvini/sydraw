@@ -1,7 +1,7 @@
+# Terminology and Abbreviations
 
-# terminology and abbreviations
-- ```sample:``` unordered set of points. a sample is made by outliers and inliers for each sampled model.
-- ```model:``` instance of a class (i.e. line with a specific slope and intercept)
-- ```npps:``` number of points per sample
-- ```ns:``` number of samples within each .mat file
-- ```nm:``` number of models to be generated within each sample of the dataset
+- **Model:** A specific instance of a class, characterized by its unique parameters (e.g., a line defined by a particular slope and intercept).
+- **Sample:** A set of points, comprising outliers and inliers for each model.
+- **N:** The total number of points present in each sample.
+- **NS (Number of Samples):** The quantity of samples contained within each .npy file.
+- **NM (Number of Models):** The count of models that are to be generated within each sample of the dataset.
