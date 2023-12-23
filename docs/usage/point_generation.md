@@ -46,6 +46,6 @@ The code above returns a NumPy array with the shape `(ns, n, 3)`, where:
   - The first two dimensions represent the x and y coordinates of the data points.
   - The third dimension contains the _class label_.
 
-The **class labels** are defined as follows:
+**Class labels** are defined as follows:
 - `0`: Outlier.
 - `1`, `2`, `3`, etc.: Model class identifier.
