@@ -71,7 +71,7 @@ pandas = "^1.4"
 
 # Graphical Tools
 plotly = "^5.13"
-dash = "^2.8"
+dash = "^2.15"
 
 
 [tool.poetry.scripts]
