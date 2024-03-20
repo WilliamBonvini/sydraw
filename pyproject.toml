@@ -35,7 +35,7 @@ matplotlib = ">=3.7"
 [tool.poetry.dev-dependencies]
 
 # Formatters
-black = "^22.1"
+black = "^24.3"
 tomli = "*" # missing 'black' dependency
 isort = "^5.10"
 
