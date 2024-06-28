@@ -66,21 +66,15 @@
 
 ### Installation
 
-Option 1: Install directly into an activated virtual environment:
 ```
 pip install sydraw
 ```
 
-Option 2: Add to your Poetry project:
-```
-poetry add sydraw
-```
 
 ## Usage
 
-Once installed, you can import and start using sydraw:
-```
-python
+Once installed, you can import it and start using it:
+```python
 >> import sydraw
 >> print(sydraw.__version__)
 ```
